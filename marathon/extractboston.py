@@ -69,7 +69,7 @@ if __name__ == '__main__':
     column_names = ('bib', 'name', 'age', 'gender', 'city', 'state',
             'country', 'citizenship', 'subgroup', 'd5k', 'd10k', 'd15k',
             'd20k', 'half', 'd25k', 'd30k', 'd35k', 'd40k', 'pace',
-            'projtime', 'offltime','overall','gender','division')
+            'projtime', 'offltime','overall','genderrank','division')
     extract_to_CSV(collections, column_names)
 
     #2009 and earlier have a different data format (14 columns)
