@@ -47,57 +47,6 @@ import pandas as pd
 from string import punctuation
 
 
-def to_minutes(time_string):
-    '''Converts a string representation of time to number of minutes.
-    INPUT:
-        time: string in 'hh:mm:ss' format
-    OUTPUT:
-        float (in minutes)
-
-    Example:
-        print to_minutes('1:23:45')
-        print to_minutes('1:23')
-        print to_minutes('hour')
-        print to_minutes('10:00:00')
-        >>
-        83.75
-        1.38333333
-        0.0
-        600.0
-    '''
-    try:
-        units = map(int, time_string.split(':'))
-    except ValueError:
-        units = [0]
-    minutes = 0
-    for unit in units:
-        minutes = unit/60. + minutes*60
-    return minutes
-
-
-def to_timestring(time_min):
-    '''Converts a string representation of time to number of minutes.
-    INPUT:
-        time_min: float, in minutes
-    OUTPUT:
-        string, time in 'hh:mm:ss' format
-    Example:
-        print to_timestring(0)
-        print to_timestring(83.75)
-        print to_timestring(1.38333333333)
-        print to_timestring(600)
-        >>
-        0:00:00
-        1:23:45
-        0:01:23
-        10:00:00
-    '''
-    hh = int(time_min) / 60
-    mm = int(time_min) % 60
-    ss = int(round((time_min % 1)*60, 0))
-    return '{0}:{1:02}:{2:02}'.format(hh,mm,ss)
-
-
 def clean_name(name):
     '''
     INPUT:
