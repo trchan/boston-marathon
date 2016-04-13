@@ -91,6 +91,24 @@ def clean_name(name):
     return firstname, lastname
 
 
+def clean_bos2010url(raw_url, year):
+    '''
+    Raw data contains url as a javascript call.
+    INPUT:
+        raw_url: string.  eg. "javascript:OpenDetailsWindow('30562')"
+        year: integer
+    OUTPUT:
+        string, eg. "http://registration.baa.org/2015/cf/public/wnd_iAthleteDetailsWindow.cfm?RaceAppID=30562"
+    '''
+    if len(raw_url) > 0:
+        dissect = raw_url.split("'")
+        if len(dissect) == 3:
+            java_id = dissect[1]
+            output = 'http://registration.baa.org/'+str(year)+'/cf/public/wnd_iAthleteDetailsWindow.cfm?RaceAppID='+java_id
+            return output
+    return '-'
+
+
 def clean_bos2010(raw_df, marathon_id, year):
     '''Cleans data from a DataFrame containing a raw extract from the HTML.  Clean DataFrame is standardized across marathons.
     INPUT
@@ -120,7 +138,7 @@ def clean_bos2010(raw_df, marathon_id, year):
     clean_df['marathon_id'] = [marathon_id] * n
     clean_df['year'] = [year] * n
     clean_df['bib'] = raw_df['bib']
-    clean_df['url'] = raw_df['url']
+    clean_df['url'] = map(lambda url: clean_bos2010url(str(url), year), raw_df['url'])
     clean_df['name'] = raw_df['name']
     firstnames, lastnames = [], []
     for name in raw_df['name']:
