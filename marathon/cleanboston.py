@@ -87,7 +87,7 @@ def clean_name(name):
         firstname = [c.upper() for c in firstname if c not in punctuation+' ']
         firstname = "".join(firstname)
     if len(names) > 2:
-        print 'WARNING name: {0:30} --> {1}, {2}'.format(name, lastname, firstname)
+        print '    WARNING name: {0:30} --> {1}, {2}'.format(name, lastname, firstname)
     return firstname, lastname
 
 
@@ -245,30 +245,37 @@ def clean_bos2001(raw_df, marathon_id, year):
     clean_df['other4'] = blank_str_array
     return clean_df
 
-if __name__ == '__main__':
-    path = 'data/'
-    file_list = ['bos10_marathon.csv', 'bos11_marathon.csv', 'bos12_marathon.csv', 'bos13_marathon.csv',
-                 'bos14_marathon.csv', 'bos15_marathon.csv']
-    marathon_id = 'boston'
-    years = [2010, 2011, 2012, 2013, 2014, 2015]
-    for file, year in zip(file_list, years):
-        raw_df = pd.read_csv(path+file)
-        clean_df = clean_bos2010(raw_df, marathon_id, year)
-        #print clean_df.sample(n=3).T
-        filename = path+marathon_id+str(year)+'_clean.csv'
-        print year, 'saved as', filename
-        clean_df.to_csv(filename)
 
-    path = 'data/'
-    file_list = ['bos01_marathon.csv', 'bos02_marathon.csv', 'bos03_marathon.csv', 'bos04_marathon.csv',
-                 'bos05_marathon.csv', 'bos06_marathon.csv', 'bos07_marathon.csv', 'bos08_marathon.csv',
-                 'bos09_marathon.csv']
-    marathon_id = 'boston'
-    years = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009]
+def batch_clean_2010(file_list, years, folder='data', name='boston'):
     for file, year in zip(file_list, years):
-        raw_df = pd.read_csv(path+file)
-        clean_df = clean_bos2001(raw_df, marathon_id, year)
+        raw_df = pd.read_csv(folder+'/'+file)
+        clean_df = clean_bos2010(raw_df, name, year)
         #print clean_df.sample(n=3).T
-        filename = path+marathon_id+str(year)+'_clean.csv'
+        filename = folder+'/'+name+str(year)+'_clean.csv'
         print year, 'saved as', filename
-        clean_df.to_csv(filename)
+        clean_df.to_csv(filename, index=False)
+
+
+def batch_clean_2001(file_list, years, folder='data', name='boston'):
+    for file, year in zip(file_list, years):
+        raw_df = pd.read_csv(folder+'/'+file)
+        clean_df = clean_bos2001(raw_df, name, year)
+        #print clean_df.sample(n=3).T
+        filename = folder+'/'+name+str(year)+'_clean.csv'
+        print year, 'saved as', filename
+        clean_df.to_csv(filename, index=False)
+
+
+if __name__ == '__main__':
+    file_list = ['bos10_marathon.csv', 'bos11_marathon.csv',
+        'bos12_marathon.csv', 'bos13_marathon.csv', 'bos14_marathon.csv',
+        'bos15_marathon.csv']
+    years = [2010, 2011, 2012, 2013, 2014, 2015]
+    batch_clean_2010(file_list, years, folder='data', name='boston')
+
+    file_list = ['bos01_marathon.csv', 'bos02_marathon.csv',
+        'bos03_marathon.csv', 'bos04_marathon.csv', 'bos05_marathon.csv',
+        'bos06_marathon.csv', 'bos07_marathon.csv', 'bos08_marathon.csv',
+        'bos09_marathon.csv']
+    years = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009]
+    batch_clean_2001(file_list, years, folder='data', name='boston')
