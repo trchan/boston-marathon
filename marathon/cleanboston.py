@@ -42,6 +42,8 @@
 # | other2        | string   | Field for future assignment
 # | other3        | string   | Field for future assignment
 # | other4        | string   | Field for future assignment
+#
+# 36 columns
 
 import pandas as pd
 from string import punctuation
@@ -168,7 +170,7 @@ def clean_bos2010(raw_df, marathon_id, year):
     clean_df['pace'] = raw_df['pace']
     clean_df['projtime'] = raw_df['projtime']
     clean_df['offltime'] = raw_df['offltime']
-    clean_df['guntime'] = raw_df['offltime']      # Approximation
+    clean_df['nettime'] = raw_df['offltime']        # Approximation
     clean_df['overall_rank'] = raw_df['overall']
     clean_df['gender_rank'] = raw_df['genderrank']
     clean_df['division_rank'] = raw_df['division']
