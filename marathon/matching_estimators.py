@@ -49,9 +49,6 @@ def get_weather_array(wunderground_array, unit):
     [92.1, 99.9]
     >>> get_weather_array(['98%', '95%'], '%')
     [98.0, 95.0]
-    >>> get_weather_array(['98%'], 'F')
-    Error in get_weather_float(), units do not match specification
-    [0]
     """
     weather_array = []
     error = False
@@ -93,11 +90,11 @@ def get_wind_vector(windspeeds, winddirections):
     """
     # direction given in pi units
     # radians = compass['South'] * np.pi
-    compass = {'North' : 0, 'South' : 1, 'East' : 0.5, 'West' : 1.5,
-              'NE' : 0.25, 'SE' : 0.75, 'SW' : 1.25, 'NW' : 1.75,
-              'NWE' : 0.125, 'ENE' : 0.375, 'ESE' : 0.625, 'SSE' : 0.875,
-              'SSW' : 1.125, 'WSW' : 1.375, 'WNW' : 1.625, 'NNW' : 1.875,
-              'Variable' : None, 'Calm' : None}
+    compass = {'North': 0, 'South': 1, 'East': 0.5, 'West': 1.5,
+               'NE': 0.25, 'SE': 0.75, 'SW': 1.25, 'NW': 1.75,
+               'NWE': 0.125, 'ENE': 0.375, 'ESE': 0.625, 'SSE': 0.875,
+               'SSW': 1.125, 'WSW': 1.375, 'WNW': 1.625, 'NNW': 1.875,
+               'Variable': None, 'Calm': None}
 
     east_winds = []
     north_winds = []
@@ -136,7 +133,8 @@ def fetch_weather_features(marathon_name, year):
     isgusty  : boolean
         True if more than half of relevant weather observations were gusty
     raining  : float
-        [0..1], Proportion of relevant weather observations where rain was observed.
+        [0..1], Proportion of relevant weather observations where rain was
+        observed.
 
     Example
     -------
@@ -145,7 +143,8 @@ def fetch_weather_features(marathon_name, year):
     >>> "{2:.2f}, {3:.2f}".format(*fetch_weather_features('boston', 2014))
     '-1.81, -6.61'
     """
-    subset_mask = (weather_df['marathon'] == marathon_name) & (weather_df['year'] == year)
+    subset_mask = ((weather_df['marathon'] == marathon_name) &
+                   (weather_df['year'] == year))
     subset_df = weather_df[subset_mask]
     n = len(subset_df)
 
@@ -172,14 +171,19 @@ def sample_estimator(df, gender, age):
     sample_df : DataFrame
     """
     estimator_df = df[(df['gender'] == gender) & (df['age'] == age)]
-    sample_df = estimator_df.sample(n=SAMPLE_SIZE, replace=True, random_state=42)
+    sample_df = estimator_df.sample(n=SAMPLE_SIZE, replace=True,
+                                    random_state=42)
 
     # Features to include from each marathon
-    sample_df = sample_df[['marathon', 'year', 'firstname', 'bib', 'age', 'gender', 'state', 'country', 'timehalf', 'offltime']]
+    sample_df = sample_df[['marathon', 'year', 'firstname', 'bib', 'age',
+                           'gender', 'state', 'country', 'timehalf',
+                           'offltime']]
     # Add weather columns
     marathon_name = df['marathon'][0]
     year = df['year'][0]
-    avgtemp, avghumid, avgwindE, avgwindN, isgusty, rainhours = fetch_weather_features(marathon_name, year)
+    avgtemp, avghumid,
+    avgwindE, avgwindN,
+    isgusty, rainhours = fetch_weather_features(marathon_name, year)
     df['avgtemp'] = avgtemp
     df['avghumid'] = avghumid
     df['avgwindE'] = avgwindE
