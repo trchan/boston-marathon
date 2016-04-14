@@ -1,4 +1,5 @@
-"""Assortment of helper functions for manipulating, searching, and plotting marathon running data.
+"""Assortment of helper functions for manipulating, searching, and plotting
+marathon running data.
 """
 
 import pandas as pd
@@ -54,7 +55,7 @@ def time_to_timestring(time_min):
     hh = int(time_min) / 60
     mm = int(time_min) % 60
     ss = int(round((time_min % 1)*60, 0))
-    return '{0}:{1:02}:{2:02}'.format(hh,mm,ss)
+    return '{0}:{1:02}:{2:02}'.format(hh, mm, ss)
 
 
 def find_missing_records(df):
@@ -74,9 +75,9 @@ def find_missing_records(df):
 
 def plot_runners_by_gender(df):
     num_bins = df['age'].max() - df['age'].min()
-    df[df['gender']==True]['age'].hist(bins=num_bins, color='b', alpha=0.5)
-    df[df['gender']==False]['age'].hist(bins=num_bins, color='r', alpha=0.5)
-    plt.legend(['men','women'])
+    df[df['gender'] == True]['age'].hist(bins=num_bins, color='b', alpha=0.5)
+    df[df['gender'] == False]['age'].hist(bins=num_bins, color='r', alpha=0.5)
+    plt.legend(['men', 'women'])
     plt.xlabel('Age')
     plt.ylabel('Number of Runners')
     plt.title('Number of Runners by Age')
@@ -139,7 +140,8 @@ def year_of_birth(runner):
 
 def is_same_runner(runner1, runner2):
     '''
-    Compares two runner profiles and determines whether they are the same runner.
+    Compares two runner profiles and determines whether they are the same
+    runner.
     INPUT:
         runner1,
         runner2 : DataFrame row
