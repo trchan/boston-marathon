@@ -58,12 +58,14 @@ def get_weather_array(wunderground_array, unit):
             weather_array.append(float(s[0:-unit_length]))
         elif s == '-':
             weather_array.append(0)
+        elif s == 'Calm':
+            weather_array.append(0)
         else:
             error = True
             weather_array.append(0)
     if error:
         print 'Error in get_weather_float(), units do not match specification'
-        print wunderground_array['date'], unit
+        # print wunderground_array, unit
     return weather_array
 
 
@@ -92,7 +94,7 @@ def get_wind_vector(windspeeds, winddirections):
     # radians = compass['South'] * np.pi
     compass = {'North': 0, 'South': 1, 'East': 0.5, 'West': 1.5,
                'NE': 0.25, 'SE': 0.75, 'SW': 1.25, 'NW': 1.75,
-               'NWE': 0.125, 'ENE': 0.375, 'ESE': 0.625, 'SSE': 0.875,
+               'NNE': 0.125, 'ENE': 0.375, 'ESE': 0.625, 'SSE': 0.875,
                'SSW': 1.125, 'WSW': 1.375, 'WNW': 1.625, 'NNW': 1.875,
                'Variable': None, 'Calm': None}
 
@@ -181,8 +183,8 @@ def sample_estimator(df, gender, age):
                            'gender', 'state', 'country', 'timehalf',
                            'offltime']]
     # Add weather columns
-    marathon_name = df[0, 'marathon']
-    year = df[0, 'year']
+    marathon_name = df.loc[0, 'marathon']
+    year = df.loc[0, 'year']
     avgtemp, avghumid, avgwindE, avgwindN, isgusty, rainhours \
         = fetch_weather_features(marathon_name, year)
     df['avgtemp'] = avgtemp
@@ -237,6 +239,7 @@ if __name__ == '__main__':
 
     matching_estimators = pd.DataFrame()
     for filename in marathon_files:
+        print 'Importing', folder+filename
         df = pd.read_csv(folder+filename)
         matching_estimators = matching_estimators.append(sample_all(df))
     save_file = folder+'boston_estimators.csv'

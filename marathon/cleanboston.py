@@ -159,9 +159,9 @@ def clean_bos2010(raw_df, marathon_id, year):
                      u'gender_rank', u'division_rank', u'other1', u'other2',
                      u'other3', u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
+    clean_df['bib'] = raw_df['bib']
     clean_df['marathon'] = marathon_id
     clean_df['year'] = year
-    clean_df['bib'] = raw_df['bib']
     clean_df['url'] = map(lambda url: clean_bos2010url(str(url), year),
                           raw_df['url'])
     clean_df['name'] = raw_df['name']
@@ -230,9 +230,9 @@ def clean_bos2001(raw_df, marathon_id, year):
                      u'division_rank', u'other1', u'other2', u'other3',
                      u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
+    clean_df['bib'] = raw_df['bib']
     clean_df['marathon'] = marathon_id
     clean_df['year'] = year
-    clean_df['bib'] = raw_df['bib']
     clean_df['url'] = blank_str
     clean_df['name'] = raw_df['name']
     firstnames, lastnames = [], []
