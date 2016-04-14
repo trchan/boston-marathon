@@ -6,7 +6,7 @@
 # Homogeneous format required.
 # |  fieldname    | type     | description |
 # |---------------|----------|-------------|
-# | marathon_id   | string   | code
+# | marathon      | string   | code
 # | year          | integer  |
 # | bib           | string   |
 # | url           | string   | link to biography or photos
@@ -79,7 +79,8 @@ def clean_name(name):
     lastname = "".join(lastname)
     firstname = names[-1]
     firstname = firstname.split()[0]
-    # catch scenario where only a first initial is present.  In that case, grab first 2 alphanumeric
+    # catch scenario where only a first initial is present.  In that case,
+    # grab first 2 alphanumeric
     if len(firstname) < 3:
         firstname = names[1]
         firstname = [c.upper() for c in firstname if c not in punctuation+' ']
@@ -89,30 +90,40 @@ def clean_name(name):
         firstname = [c.upper() for c in firstname if c not in punctuation+' ']
         firstname = "".join(firstname)
     if len(names) > 2:
-        print '    WARNING name: {0:30} --> {1}, {2}'.format(name, lastname, firstname)
+        print '    WARNING name: {0:30} --> {1}, {2}'.format(name, lastname,
+                                                             firstname)
     return firstname, lastname
 
 
 def clean_bos2010url(raw_url, year):
-    '''
-    Raw data contains url as a javascript call.
-    INPUT:
-        raw_url: string.  eg. "javascript:OpenDetailsWindow('30562')"
-        year: integer
-    OUTPUT:
-        string, eg. "http://registration.baa.org/2015/cf/public/wnd_iAthleteDetailsWindow.cfm?RaceAppID=30562"
+    '''Raw data contains url as a javascript call.
+    Parameters
+    ----------
+    raw_url : string
+        This is typically a javascript call embedded in the html page.
+    year : integer
+    Returns
+    -------
+    string
+        url format
+    Example
+    -------
+    >>> clean_bos2010url("javascript:OpenDetailsWindow('30562')", 2015)
+    'http://registration.baa.org/2015/cf/public/wnd_iAthleteDetailsWindow.cfm?RaceAppID=30562'
     '''
     if len(raw_url) > 0:
         dissect = raw_url.split("'")
         if len(dissect) == 3:
             java_id = dissect[1]
-            output = 'http://registration.baa.org/'+str(year)+'/cf/public/wnd_iAthleteDetailsWindow.cfm?RaceAppID='+java_id
+            output = 'http://registration.baa.org/' + str(year) + \
+                '/cf/public/wnd_iAthleteDetailsWindow.cfm?RaceAppID='+java_id
             return output
     return '-'
 
 
 def clean_bos2010(raw_df, marathon_id, year):
-    '''Cleans data from a DataFrame containing a raw extract from the HTML.  Clean DataFrame is standardized across marathons.
+    '''Cleans data from a DataFrame containing a raw extract from the HTML.
+    Clean DataFrame is standardized across marathons.
     INPUT
         DataFrame
         marathon_id: string
@@ -122,25 +133,28 @@ def clean_bos2010(raw_df, marathon_id, year):
 
     RAW CSV HEADER
     Index([u'bib', u'name', u'age', u'gender', u'city', u'state', u'country',
-           u'citizenship', u'subgroup', u'url', u'd5k', u'd10k', u'd15k', u'd20k',
-           u'half', u'd25k', u'd30k', u'd35k', u'd40k', u'pace', u'projtime',
-           u'offltime', u'overall', u'genderrank', u'division'])
+           u'citizenship', u'subgroup', u'url', u'd5k', u'd10k', u'd15k',
+           u'd20k', u'half', u'd25k', u'd30k', u'd35k', u'd40k', u'pace',
+           u'projtime', u'offltime', u'overall', u'genderrank', u'division'])
     '''
     n = len(raw_df)
     blank_str_array = ['-'] * n
     blank_val_array = [0] * n
-    clean_columns = [u'marathon_id', u'year', u'bib', u'url', u'name', u'firstname',
-   u'lastname', u'age', u'gender', u'city', u'state', u'country',
-   u'citizenship', u'subgroup', u'gunstart', u'starttime', u'time5k',
-   u'time10k', u'time15k', u'time20k', u'timehalf', u'time25k', u'time30k',
-   u'time35k', u'time40k', u'pace', u'projtime', u'offltime', u'nettime',
-   u'overall_rank', u'gender_rank', u'division_rank', u'other1', u'other2',
-   u'other3', u'other4']
+    clean_columns = [u'marathon', u'year', u'bib', u'url', u'name',
+                     u'firstname', u'lastname', u'age', u'gender', u'city',
+                     u'state', u'country', u'citizenship', u'subgroup',
+                     u'gunstart', u'starttime', u'time5k', u'time10k',
+                     u'time15k', u'time20k', u'timehalf', u'time25k',
+                     u'time30k', u'time35k', u'time40k', u'pace',
+                     u'projtime', u'offltime', u'nettime', u'overall_rank',
+                     u'gender_rank', u'division_rank', u'other1', u'other2',
+                     u'other3', u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
-    clean_df['marathon_id'] = [marathon_id] * n
+    clean_df['marathon'] = [marathon_id] * n
     clean_df['year'] = [year] * n
     clean_df['bib'] = raw_df['bib']
-    clean_df['url'] = map(lambda url: clean_bos2010url(str(url), year), raw_df['url'])
+    clean_df['url'] = map(lambda url: clean_bos2010url(str(url), year),
+                          raw_df['url'])
     clean_df['name'] = raw_df['name']
     firstnames, lastnames = [], []
     for name in raw_df['name']:
@@ -150,7 +164,7 @@ def clean_bos2010(raw_df, marathon_id, year):
     clean_df['firstname'] = firstnames
     clean_df['lastname'] = lastnames
     clean_df['age'] = raw_df['age']
-    clean_df['gender'] = raw_df['gender']=='M'
+    clean_df['gender'] = raw_df['gender'] == 'M'
     clean_df['city'] = raw_df['city']
     clean_df['state'] = raw_df['state']
     clean_df['country'] = raw_df['country']
@@ -182,7 +196,8 @@ def clean_bos2010(raw_df, marathon_id, year):
 
 
 def clean_bos2001(raw_df, marathon_id, year):
-    '''Cleans data from a DataFrame containing a raw extract from the HTML.  Clean DataFrame is standardized across marathons.
+    '''Cleans data from a DataFrame containing a raw extract from the HTML.
+    Clean DataFrame is standardized across marathons.
     INPUT
         DataFrame
     OUTPUT
@@ -196,15 +211,17 @@ def clean_bos2001(raw_df, marathon_id, year):
     n = len(raw_df)
     blank_str_array = ['-'] * n
     blank_val_array = [0] * n
-    clean_columns = [u'marathon_id', u'year', u'bib', u'url', u'name', u'firstname',
-       u'lastname', u'age', u'gender', u'city', u'state', u'country',
-       u'citizenship', u'subgroup', u'gunstart', u'starttime', u'time5k',
-       u'time10k', u'time15k', u'time20k', u'timehalf', u'time25k', u'time30k',
-       u'time35k', u'time40k', u'pace', u'projtime', u'offltime', u'nettime',
-       u'overall_rank', u'gender_rank', u'division_rank', u'other1', u'other2',
-       u'other3', u'other4']
+    clean_columns = [u'marathon', u'year', u'bib', u'url', u'name',
+                     u'firstname', u'lastname', u'age', u'gender', u'city',
+                     u'state', u'country', u'citizenship', u'subgroup',
+                     u'gunstart', u'starttime', u'time5k', u'time10k',
+                     u'time15k', u'time20k', u'timehalf', u'time25k',
+                     u'time30k', u'time35k', u'time40k', u'pace', u'projtime',
+                     u'offltime', u'nettime', u'overall_rank', u'gender_rank',
+                     u'division_rank', u'other1', u'other2', u'other3',
+                     u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
-    clean_df['marathon_id'] = [marathon_id] * n
+    clean_df['marathon'] = [marathon_id] * n
     clean_df['year'] = [year] * n
     clean_df['bib'] = raw_df['bib']
     clean_df['url'] = blank_str_array
@@ -217,7 +234,7 @@ def clean_bos2001(raw_df, marathon_id, year):
     clean_df['firstname'] = firstnames
     clean_df['lastname'] = lastnames
     clean_df['age'] = raw_df['age']
-    clean_df['gender'] = raw_df['gender']=='M'
+    clean_df['gender'] = raw_df['gender'] == 'M'
     clean_df['city'] = raw_df['city']
     clean_df['state'] = raw_df['state']
     clean_df['country'] = raw_df['country']
@@ -238,9 +255,12 @@ def clean_bos2001(raw_df, marathon_id, year):
     clean_df['projtime'] = blank_val_array
     clean_df['offltime'] = raw_df['Officialtime']
     clean_df['nettime'] = raw_df['nettime']
-    clean_df['overall_rank'] = map(lambda s: int(s.split('/')[0]), raw_df['overallrank'])
-    clean_df['gender_rank'] = map(lambda s: int(s.split('/')[0]), raw_df['genderrank'])
-    clean_df['division_rank'] = map(lambda s: int(s.split('/')[0]), raw_df['divisionrank'])
+    clean_df['overall_rank'] = map(lambda s: int(s.split('/')[0]),
+                                   raw_df['overallrank'])
+    clean_df['gender_rank'] = map(lambda s: int(s.split('/')[0]),
+                                  raw_df['genderrank'])
+    clean_df['division_rank'] = map(lambda s: int(s.split('/')[0]),
+                                    raw_df['divisionrank'])
     clean_df['other1'] = blank_str_array
     clean_df['other2'] = blank_str_array
     clean_df['other3'] = blank_str_array
@@ -252,7 +272,7 @@ def batch_clean_2010(file_list, years, folder='data', name='boston'):
     for file, year in zip(file_list, years):
         raw_df = pd.read_csv(folder+'/'+file)
         clean_df = clean_bos2010(raw_df, name, year)
-        #print clean_df.sample(n=3).T
+        # print clean_df.sample(n=3).T
         filename = folder+'/'+name+str(year)+'_clean.csv'
         print year, 'saved as', filename
         clean_df.to_csv(filename, index=False)
@@ -262,7 +282,7 @@ def batch_clean_2001(file_list, years, folder='data', name='boston'):
     for file, year in zip(file_list, years):
         raw_df = pd.read_csv(folder+'/'+file)
         clean_df = clean_bos2001(raw_df, name, year)
-        #print clean_df.sample(n=3).T
+        # print clean_df.sample(n=3).T
         filename = folder+'/'+name+str(year)+'_clean.csv'
         print year, 'saved as', filename
         clean_df.to_csv(filename, index=False)
@@ -270,14 +290,15 @@ def batch_clean_2001(file_list, years, folder='data', name='boston'):
 
 if __name__ == '__main__':
     file_list = ['bos10_marathon.csv', 'bos11_marathon.csv',
-        'bos12_marathon.csv', 'bos13_marathon.csv', 'bos14_marathon.csv',
-        'bos15_marathon.csv']
+                 'bos12_marathon.csv', 'bos13_marathon.csv',
+                 'bos14_marathon.csv', 'bos15_marathon.csv']
     years = [2010, 2011, 2012, 2013, 2014, 2015]
     batch_clean_2010(file_list, years, folder='data', name='boston')
 
     file_list = ['bos01_marathon.csv', 'bos02_marathon.csv',
-        'bos03_marathon.csv', 'bos04_marathon.csv', 'bos05_marathon.csv',
-        'bos06_marathon.csv', 'bos07_marathon.csv', 'bos08_marathon.csv',
-        'bos09_marathon.csv']
+                 'bos03_marathon.csv', 'bos04_marathon.csv',
+                 'bos05_marathon.csv', 'bos06_marathon.csv',
+                 'bos07_marathon.csv', 'bos08_marathon.csv',
+                 'bos09_marathon.csv']
     years = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009]
     batch_clean_2001(file_list, years, folder='data', name='boston')
