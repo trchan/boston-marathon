@@ -1,8 +1,8 @@
 '''
 Retrieve weather data (by time) as specified by a .csv file.
-csv Format:
-id,date,start city,end city
-bos15,04/20/2015,Worcester MA,Boston MA
+input csv header:
+marathon,year,date,startcity,endcity,starthour,endhour
+Boston,2011,04/11/2011,Worcester MA, Boston MA,10,16
 '''
 
 import requests
@@ -14,15 +14,31 @@ from time import sleep
 
 
 def get_hour(hour_text):
-    '''
-    INPUT:
-        hour_text: text, eg '1:07 PM'
-    OUTPUT:
-        float, eg '13.11667'
-    Returns time in hours from time representation on wunderground.com.
-    '''
+    """Returns time in hours from time representation on wunderground.com.
+
+    Parameters
+    ----------
+    hour_text : text
+        String representation of time in HH:MM AM/PM, Eg. '1:07 PM'
+
+    Returns
+    -------
+    hour : float
+        Time in hours.
+
+    Example
+    -------
+    >>> get_hour('1:07 PM')
+    13.116666666666667
+    >>> get_hour('12:54 AM')
+    0.9
+    >>> get_hour('12:54 PM')
+    12.9
+    """
     time, meridiem = hour_text.split(' ')
     hour, minute = map(int, time.split(':'))
+    if hour == 12:
+        hour = 0
     if meridiem == 'PM':
         hour += 12
     hour += minute/60.
@@ -53,7 +69,8 @@ def extract_header(response):
 
 def extract_weather_for_time(response, target_time):
     '''
-    Finds the weather information from a response object which is closest to the specified time
+    Finds the weather information from a response object which is closest to
+    the specified time
     '''
     tree = lxml.html.fromstring(response.text)
     # CSSSelector for Time
@@ -63,11 +80,16 @@ def extract_weather_for_time(response, target_time):
     # CSSSelector for row that corresponds to closest time
     sel = CSSSelector('#obsTable :nth-child('+str(ix+1)+') td')
     # Convert text to an array
-    row_data = [item.text_content().strip().encode('ascii','ignore') for item in sel(tree)]
+    row_data = [item.text_content().strip().encode('ascii', 'ignore')
+                for item in sel(tree)]
+    # Check if values are shifted due to dropped windchill heatindex column
+    # Identify checking Dew Point column for a Humidity value (% instead of F)
+    if row_data[3][-1] == '%':
+        row_data = row_data[0:2] + ['-'] + row_data[2:]
     return row_data
 
 
-def fetch_history_page(location, month, day, year):
+def fetch_weather_page(location, month, day, year):
     '''
     Requests historical data from wunderground.com and returns response object.
     INPUT:
@@ -79,13 +101,13 @@ def fetch_history_page(location, month, day, year):
         response object
     '''
     url = 'https://www.wunderground.com/history/'
-    params = {'airportorwmo' : 'query',
-            'historytype' : 'DailyHistory',
-            'backurl' : '/history/index.html',
-            'code' : location,
-            'month' : month,
-            'day' : day,
-            'year' : year}
+    params = {'airportorwmo': 'query',
+              'historytype': 'DailyHistory',
+              'backurl': '/history/index.html',
+              'code': location,
+              'month': month,
+              'day': day,
+              'year': year}
     # Try the request till it works (up to 3 times)
     count = 0
     success = False
@@ -106,39 +128,51 @@ def fetch_history_page(location, month, day, year):
 
 
 def fetch_by_csv(filename):
+    '''Reads query information from a .csv file and returns scraped, and
+    extracted data as a DataFrame.  One row in a query file results in
+    multiple rows of the output dataframe
+
+    Parameters
+    ----------
+    filename : string
+        Name of query .csv file.  Should have the following header:
+        marathon,year,date,startcity,endcity,starthour,endhour
+
+    Output
+    ------
+    weather_df : DataFrame
+        Weather data, one row per observation.
+        Starts with the following header:
+        marathon,year,date,city,...
     '''
-    Reads query information from a .csv file and returns scraped, extracted data as a DataFrame.
-    INPUT:
-        filename: string, corresponding to a .csv file
-    OUTPUT:
-        Pandas dataframe
-    '''
-    start_hour = 10
-    end_hour = 16
-    interval = 2
+    INTERVAL = 1
 
     query_df = pd.read_csv(filename)
-    data_df = pd.DataFrame()
+    weather_df = pd.DataFrame()
     headers = None
-    for ix,query_row in query_df.iterrows():
+    # iterate through the rows of the query file
+    for ix, query_row in query_df.iterrows():
+        start_hour = query_row['starthour']
+        end_hour = query_row['endhour']
         month, day, year = map(int, query_row['date'].split('/'))
-        for cityname in [query_row['start city'], query_row['end city']]:
-            response = fetch_history_page(cityname, month, day, year)
-            if headers == None:
-                headers = ['id','date','city']
+        for cityname in [query_row['startcity'], query_row['endcity']]:
+            response = fetch_weather_page(cityname, month, day, year)
+            if headers is None:
+                headers = ['marathon', 'year', 'date', 'city']
                 headers.extend(extract_header(response))
-            for t in range(start_hour, end_hour+1, interval):
-                data_row = [query_row['id'], query_row['date'], cityname]
+            for t in range(start_hour, end_hour+1, INTERVAL):
+                data_row = [query_row['marathon'], query_row['year'],
+                            query_row['date'], cityname]
                 data_row.extend(extract_weather_for_time(response, t))
-                data_df = data_df.append([data_row])
-    print
-    data_df.columns = headers
-    return data_df
+                weather_df = weather_df.append([data_row])
+    weather_df.columns = headers
+    return weather_df
 
 
 def query_by_csv_to_csv(inputfile, outputfile):
     '''
-    Reads query information from a .csv file and saves scraped, extracted data as a .csv file.
+    Reads query information from a .csv file and saves scraped, extracted data
+    as a .csv file.
     INPUT:
         inputfile: string   filename of .csv file with queries
         outputfile: string  filename of .csv file to save scraped data
@@ -152,12 +186,16 @@ def query_by_csv_to_csv(inputfile, outputfile):
     print 'Results saved to', outputfile
 
 
-if __name__ == "__main__":
-    #This is test code that tests whether the fetch_history_page() can scrape data from one query.
-    response = fetch_history_page('Boston, MA', 04, 20, 2015)
+def test_fetch_weather():
+    response = fetch_weather_page('Boston MA', 04, 20, 2015)
     header = extract_header(response)
     data = []
     data.append(extract_weather_for_time(response, 10))
     data.append(extract_weather_for_time(response, 16))
+    print
     for h, d0, d1 in zip(header, *data):
-        print h,'\t',d0,'\t',d1
+        print '{0:15}{1:10}{2:10}'.format(h, d0, d1)
+
+
+if __name__ == "__main__":
+    query_by_csv_to_csv('data/marathon_dates.csv', 'data/marathon_weather.csv')
