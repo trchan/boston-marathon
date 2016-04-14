@@ -47,10 +47,13 @@
 
 import pandas as pd
 from string import punctuation
+from marathonlib import time_to_minutes
 
 
 def clean_name(name):
-    '''Takes a full name in the general format of "Lastname, Firstname I" and converts it to a format that increases the chance of matching names from a variety of sources.
+    '''Takes a full name in the general format of "Lastname, Firstname I" and
+    converts it to a format that increases the chance of matching names from a
+    variety of sources.
         - Uppercase
         - Punctuation is removed
         - middle names removed
@@ -144,8 +147,8 @@ def clean_bos2010(raw_df, marathon_id, year):
            u'projtime', u'offltime', u'overall', u'genderrank', u'division'])
     '''
     n = len(raw_df)
-    blank_str_array = ['-'] * n
-    blank_val_array = [0] * n
+    blank_str = '-'
+    blank_val = 0
     clean_columns = [u'marathon', u'year', u'bib', u'url', u'name',
                      u'firstname', u'lastname', u'age', u'gender', u'city',
                      u'state', u'country', u'citizenship', u'subgroup',
@@ -156,8 +159,8 @@ def clean_bos2010(raw_df, marathon_id, year):
                      u'gender_rank', u'division_rank', u'other1', u'other2',
                      u'other3', u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
-    clean_df['marathon'] = [marathon_id] * n
-    clean_df['year'] = [year] * n
+    clean_df['marathon'] = marathon_id
+    clean_df['year'] = year
     clean_df['bib'] = raw_df['bib']
     clean_df['url'] = map(lambda url: clean_bos2010url(str(url), year),
                           raw_df['url'])
@@ -176,28 +179,28 @@ def clean_bos2010(raw_df, marathon_id, year):
     clean_df['country'] = raw_df['country']
     clean_df['citizenship'] = raw_df['citizenship']
     clean_df['subgroup'] = raw_df['subgroup']
-    clean_df['gunstart'] = blank_val_array
-    clean_df['starttime'] = blank_val_array
-    clean_df['time5k'] = raw_df['d5k']
-    clean_df['time10k'] = raw_df['d10k']
-    clean_df['time15k'] = raw_df['d15k']
-    clean_df['time20k'] = raw_df['d20k']
-    clean_df['timehalf'] = raw_df['half']
-    clean_df['time25k'] = raw_df['d25k']
-    clean_df['time30k'] = raw_df['d30k']
-    clean_df['time35k'] = raw_df['d35k']
-    clean_df['time40k'] = raw_df['d40k']
-    clean_df['pace'] = raw_df['pace']
-    clean_df['projtime'] = raw_df['projtime']
-    clean_df['offltime'] = raw_df['offltime']
-    clean_df['nettime'] = raw_df['offltime']        # Approximation
+    clean_df['gunstart'] = blank_val
+    clean_df['starttime'] = blank_val
+    clean_df['time5k'] = map(time_to_minutes, raw_df['d5k'])
+    clean_df['time10k'] = map(time_to_minutes, raw_df['d10k'])
+    clean_df['time15k'] = map(time_to_minutes, raw_df['d15k'])
+    clean_df['time20k'] = map(time_to_minutes, raw_df['d20k'])
+    clean_df['timehalf'] = map(time_to_minutes, raw_df['half'])
+    clean_df['time25k'] = map(time_to_minutes, raw_df['d25k'])
+    clean_df['time30k'] = map(time_to_minutes, raw_df['d30k'])
+    clean_df['time35k'] = map(time_to_minutes, raw_df['d35k'])
+    clean_df['time40k'] = map(time_to_minutes, raw_df['d40k'])
+    clean_df['pace'] = map(time_to_minutes, raw_df['pace'])
+    clean_df['projtime'] = map(time_to_minutes, raw_df['projtime'])
+    clean_df['offltime'] = map(time_to_minutes, raw_df['offltime'])
+    clean_df['nettime'] = map(time_to_minutes, raw_df['offltime'])
     clean_df['overall_rank'] = raw_df['overall']
     clean_df['gender_rank'] = raw_df['genderrank']
     clean_df['division_rank'] = raw_df['division']
-    clean_df['other1'] = blank_str_array
-    clean_df['other2'] = blank_str_array
-    clean_df['other3'] = blank_str_array
-    clean_df['other4'] = blank_str_array
+    clean_df['other1'] = blank_str
+    clean_df['other2'] = blank_str
+    clean_df['other3'] = blank_str
+    clean_df['other4'] = blank_str
     return clean_df
 
 
@@ -215,8 +218,8 @@ def clean_bos2001(raw_df, marathon_id, year):
        u'Officialtime', u'nettime'], dtype='object')
     '''
     n = len(raw_df)
-    blank_str_array = ['-'] * n
-    blank_val_array = [0] * n
+    blank_str = '-'
+    blank_val = 0
     clean_columns = [u'marathon', u'year', u'bib', u'url', u'name',
                      u'firstname', u'lastname', u'age', u'gender', u'city',
                      u'state', u'country', u'citizenship', u'subgroup',
@@ -227,10 +230,10 @@ def clean_bos2001(raw_df, marathon_id, year):
                      u'division_rank', u'other1', u'other2', u'other3',
                      u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
-    clean_df['marathon'] = [marathon_id] * n
-    clean_df['year'] = [year] * n
+    clean_df['marathon'] = marathon_id
+    clean_df['year'] = year
     clean_df['bib'] = raw_df['bib']
-    clean_df['url'] = blank_str_array
+    clean_df['url'] = blank_str
     clean_df['name'] = raw_df['name']
     firstnames, lastnames = [], []
     for name in raw_df['name']:
@@ -244,33 +247,33 @@ def clean_bos2001(raw_df, marathon_id, year):
     clean_df['city'] = raw_df['city']
     clean_df['state'] = raw_df['state']
     clean_df['country'] = raw_df['country']
-    clean_df['citizenship'] = blank_str_array
+    clean_df['citizenship'] = blank_str
     clean_df['subgroup'] = raw_df['subgroup']
-    clean_df['gunstart'] = blank_val_array
-    clean_df['starttime'] = blank_val_array
-    clean_df['time5k'] = blank_val_array
-    clean_df['time10k'] = blank_val_array
-    clean_df['time15k'] = blank_val_array
-    clean_df['time20k'] = blank_val_array
-    clean_df['timehalf'] = blank_val_array
-    clean_df['time25k'] = blank_val_array
-    clean_df['time30k'] = blank_val_array
-    clean_df['time35k'] = blank_val_array
-    clean_df['time40k'] = blank_val_array
-    clean_df['pace'] = blank_val_array
-    clean_df['projtime'] = blank_val_array
-    clean_df['offltime'] = raw_df['Officialtime']
-    clean_df['nettime'] = raw_df['nettime']
+    clean_df['gunstart'] = blank_val
+    clean_df['starttime'] = blank_val
+    clean_df['time5k'] = blank_val
+    clean_df['time10k'] = blank_val
+    clean_df['time15k'] = blank_val
+    clean_df['time20k'] = blank_val
+    clean_df['timehalf'] = blank_val
+    clean_df['time25k'] = blank_val
+    clean_df['time30k'] = blank_val
+    clean_df['time35k'] = blank_val
+    clean_df['time40k'] = blank_val
+    clean_df['pace'] = blank_val
+    clean_df['projtime'] = blank_val
+    clean_df['offltime'] = map(time_to_minutes, raw_df['Officialtime'])
+    clean_df['nettime'] = map(time_to_minutes, raw_df['nettime'])
     clean_df['overall_rank'] = map(lambda s: int(s.split('/')[0]),
                                    raw_df['overallrank'])
     clean_df['gender_rank'] = map(lambda s: int(s.split('/')[0]),
                                   raw_df['genderrank'])
     clean_df['division_rank'] = map(lambda s: int(s.split('/')[0]),
                                     raw_df['divisionrank'])
-    clean_df['other1'] = blank_str_array
-    clean_df['other2'] = blank_str_array
-    clean_df['other3'] = blank_str_array
-    clean_df['other4'] = blank_str_array
+    clean_df['other1'] = blank_str
+    clean_df['other2'] = blank_str
+    clean_df['other3'] = blank_str
+    clean_df['other4'] = blank_str
     return clean_df
 
 

@@ -3,6 +3,7 @@ marathon running data.
 """
 
 import pandas as pd
+from numpy import float64
 import matplotlib.pyplot as plt
 from string import punctuation
 
@@ -26,6 +27,8 @@ def time_to_minutes(time_string):
     >>> print to_minutes('10:00:00')
     600.0
     """
+    if type(time_string) in (float, float64):
+        return time_string
     try:
         units = map(int, time_string.split(':'))
     except ValueError:
