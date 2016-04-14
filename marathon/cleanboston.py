@@ -50,28 +50,37 @@ from string import punctuation
 
 
 def clean_name(name):
-    '''
-    INPUT:
-        name: string
-    OUTPUT:
-        (string, string): firstname, lastname
-    Sample conversions:
-        Lastname, Firstname A          --> FIRSTNAME, LASTNAME
-        Abraham Peregrina, Nahim       --> NAHIM, ABRAHAMPEREGRINA
-        Aase, Geir Harald              --> GEIR, AASE
-        Abdallah, Michael A            --> MICHAEL, ABDALLAH
-        Abreu, Boris R.                --> BORIS, ABREU
-        Abou-Zamzam, Ahmed M. Jr.      --> AHMED, ABOUZAMZAM
-        Zuccardi Merli, Gianluigi      --> GIANLUIGI, ZUCCARDIMERLI
-    Trouble names found:
-        Sung, Kwong Hung, Patrick      --> KWONG, PATRICK
-        Tang, Xue Hui, Claire          --> XUE, CLAIRE
-        Mercado, M.D., Michael G.      --> MERCADO, MICHAEL
-        Brown, E G Ned                 --> BROWN, EG
-        Buckley, Ed                    --> BUCKLEY, ED
-        Andres, R. Jimmy               --> ANDRES, RJ
-        Maier, Jr., Albert F. Esq      --> MAIER, ALBERT
-        Baranowski, D.C., Dean A.      --> BARANOWSKI, DEAN
+    '''Takes a full name in the general format of "Lastname, Firstname I" and converts it to a format that increases the chance of matching names from a variety of sources.
+        - Uppercase
+        - Punctuation is removed
+        - middle names removed
+        - Suffixes removed
+    Parameters
+    ----------
+    name : string
+    Returns
+    -------
+    (firstname, lastname) : string, string
+    Examples
+    --------
+    >>> clean_name('Abraham Peregrina, Nahim')
+    ('NAHIM', 'ABRAHAMPEREGRINA')
+    >>> clean_name('Aase, Geir Harald')
+    ('GEIR', 'AASE')
+    >>> clean_name('Abou-Zamzam, Ahmed M. Jr.')
+    ('AHMED', 'ABOUZAMZAM')
+    >>> clean_name('Buckley, Ed')
+    ('ED', 'BUCKLEY')
+
+    Trouble cases are handled as shown below
+    >>> clean_name('Sung, Kwong Hung, Patrick')
+    ('PATRICK', 'SUNG')
+    >>> clean_name('Mercado, M.D., Michael G.')
+    ('MICHAEL', 'MERCADO')
+    >>> clean_name('Brown, E G Ned')
+    ('EG', 'BROWN')
+    >>> clean_name('Andres, R. Jimmy')
+    ('RJ', 'ANDRES')
     '''
     names = name.split(',')
     lastname = names[0]
@@ -89,9 +98,6 @@ def clean_name(name):
     else:
         firstname = [c.upper() for c in firstname if c not in punctuation+' ']
         firstname = "".join(firstname)
-    if len(names) > 2:
-        print '    WARNING name: {0:30} --> {1}, {2}'.format(name, lastname,
-                                                             firstname)
     return firstname, lastname
 
 
