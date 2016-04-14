@@ -39,7 +39,6 @@ def sample_estimator(df, gender, age):
     ------
     sample_df : DataFrame
     """
-    print df['marathon'][0], df['year'][0]
     estimator_df = df[(df['gender'] == gender) & (df['age'] == age)]
     return estimator_df.sample(n=SAMPLE_SIZE, replace=True, random_state=42)
 
@@ -81,4 +80,6 @@ if __name__ == '__main__':
     for filename in marathon_files:
         df = pd.read_csv(folder+filename)
         matching_estimators = matching_estimators.append(sample_all(df))
-    print matching_estimators.shape
+    save_file = folder+'boston_estimators.csv'
+    print 'Saving', save_file
+    matching_estimators.to_csv(folder+'boston_estimators.csv')
