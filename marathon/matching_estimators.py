@@ -147,7 +147,9 @@ def fetch_weather_features(marathon_name, year):
                    (weather_df['year'] == year))
     subset_df = weather_df[subset_mask]
     n = len(subset_df)
-
+    # No weather data found
+    if n == 0:
+        return 0, 0, 0, 0, False, 0
     avgtemp = np.mean(get_weather_array(subset_df['Temp.'], 'F'))
     avghumid = np.mean(get_weather_array(subset_df['Humidity'], '%'))
     avgwindE, avgwindN = get_wind_vector(subset_df['Wind Speed'],
@@ -179,11 +181,10 @@ def sample_estimator(df, gender, age):
                            'gender', 'state', 'country', 'timehalf',
                            'offltime']]
     # Add weather columns
-    marathon_name = df['marathon'][0]
-    year = df['year'][0]
-    avgtemp, avghumid,
-    avgwindE, avgwindN,
-    isgusty, rainhours = fetch_weather_features(marathon_name, year)
+    marathon_name = df[0, 'marathon']
+    year = df[0, 'year']
+    avgtemp, avghumid, avgwindE, avgwindN, isgusty, rainhours \
+        = fetch_weather_features(marathon_name, year)
     df['avgtemp'] = avgtemp
     df['avghumid'] = avghumid
     df['avgwindE'] = avgwindE
