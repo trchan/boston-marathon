@@ -69,6 +69,27 @@ def get_weather_array(wunderground_array, unit):
     return weather_array
 
 
+def get_avg_windspeed(windspeeds):
+    """Calculates the average wind speed, irregardless of direction
+
+    Parameters
+    ----------
+    windspeeds : array-like
+        array of speeds in format '18.1mph'
+
+    Returns
+    -------
+    avgwindspeed : float
+
+    Example
+    -------
+    >>> get_avg_windspeed(['15.1mph', '18.6mph', '12.9mph'])
+    15.533333333333333
+    """
+    windspeeds = get_weather_array(windspeeds, 'mph')
+    return np.mean(windspeeds)
+
+
 def get_wind_vector(windspeeds, winddirections):
     """Calculates the average wind vector given a list of wind speeds and
     directions.
@@ -79,6 +100,7 @@ def get_wind_vector(windspeeds, winddirections):
         array of speeds in format '18.1mph'
     winddirections : array-like
         array of directions in 16-point compass format (wunderground)
+
     Returns
     -------
     (avg_east_wind, avg_north_wind) : (float, float)
@@ -128,6 +150,8 @@ def fetch_weather_features(marathon_name, year):
         average temperature across time and across cities
     avghumid : float
         average humidity across time and across cities
+    avgwind  : float
+        average net wind speed
     avgwindE : float
         average wind speed, easterly component (west is negative)
     avgwindN : float
@@ -142,7 +166,7 @@ def fetch_weather_features(marathon_name, year):
     -------
     >>> "{0:.2f}, {1:.2f}".format(*fetch_weather_features('boston', 2014))
     '59.41, 25.29'
-    >>> "{2:.2f}, {3:.2f}".format(*fetch_weather_features('boston', 2014))
+    >>> "{3:.2f}, {4:.2f}".format(*fetch_weather_features('boston', 2014))
     '-1.81, -6.61'
     """
     subset_mask = ((weather_df['marathon'] == marathon_name) &
@@ -154,12 +178,13 @@ def fetch_weather_features(marathon_name, year):
         return 0, 0, 0, 0, False, 0
     avgtemp = np.mean(get_weather_array(subset_df['Temp.'], 'F'))
     avghumid = np.mean(get_weather_array(subset_df['Humidity'], '%'))
+    avgwind = get_avg_windspeed(subset_df['Wind Speed'])
     avgwindE, avgwindN = get_wind_vector(subset_df['Wind Speed'],
                                          subset_df['Wind Dir'])
     isgusty = sum(subset_df['Gust Speed'] != '-') > (n / 2)
     rainhours = sum(subset_df['Events'] == 'Rain') / float(n)
 
-    return avgtemp, avghumid, avgwindE, avgwindN, isgusty, rainhours
+    return avgtemp, avghumid, avgwind, avgwindE, avgwindN, isgusty, rainhours
 
 
 def sample_estimator(df, gender, age):
@@ -185,10 +210,11 @@ def sample_estimator(df, gender, age):
     # Add weather columns
     marathon_name = df.loc[0, 'marathon']
     year = df.loc[0, 'year']
-    avgtemp, avghumid, avgwindE, avgwindN, isgusty, rainhours \
+    avgtemp, avghumid, avgwind, avgwindE, avgwindN, isgusty, rainhours \
         = fetch_weather_features(marathon_name, year)
     sample_df['avgtemp'] = avgtemp
     sample_df['avghumid'] = avghumid
+    sample_df['avgwind'] = avgwind
     sample_df['avgwindE'] = avgwindE
     sample_df['avgwindN'] = avgwindN
     sample_df['isgusty'] = isgusty
