@@ -157,7 +157,7 @@ def fetch_weather_features(marathon_name, year):
     avgwindE, avgwindN = get_wind_vector(subset_df['Wind Speed'],
                                          subset_df['Wind Dir'])
     isgusty = sum(subset_df['Gust Speed'] != '-') > (n / 2)
-    rainhours = sum(subset_df['Events'] == 'Rain') / n
+    rainhours = sum(subset_df['Events'] == 'Rain') / float(n)
 
     return avgtemp, avghumid, avgwindE, avgwindN, isgusty, rainhours
 
@@ -187,12 +187,12 @@ def sample_estimator(df, gender, age):
     year = df.loc[0, 'year']
     avgtemp, avghumid, avgwindE, avgwindN, isgusty, rainhours \
         = fetch_weather_features(marathon_name, year)
-    df['avgtemp'] = avgtemp
-    df['avghumid'] = avghumid
-    df['avgwindE'] = avgwindE
-    df['avgwindN'] = avgwindN
-    df['isgusty'] = isgusty
-    df['rainhours'] = rainhours
+    sample_df['avgtemp'] = avgtemp
+    sample_df['avghumid'] = avghumid
+    sample_df['avgwindE'] = avgwindE
+    sample_df['avgwindN'] = avgwindN
+    sample_df['isgusty'] = isgusty
+    sample_df['rainhours'] = rainhours
 
     return sample_df
 
