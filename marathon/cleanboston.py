@@ -50,6 +50,34 @@ from string import punctuation
 from marathonlib import time_to_minutes
 
 
+def clean_bib(bib_string):
+    """Takes a raw bib string, and converts it to an integer.
+
+    Parameters
+    ----------
+    bib_string : string
+        Typically a raw extract from a scrape
+
+    Returns
+    -------
+    bib_number : integer
+
+    Example
+    -------
+    >>> clean_bib('43')
+    43
+    >>> clean_bib('F12')
+    12
+    >>> clean_bib('W12')
+    12
+    """
+    known_prefixes = 'FWH'  # Female, Wheelchair, and Handcycles
+    if bib_string[0] in known_prefixes:
+        return int(bib_string[1:])
+    else:
+        return int(bib_string)
+
+
 def clean_name(name):
     '''Takes a full name in the general format of "Lastname, Firstname I" and
     converts it to a format that increases the chance of matching names from a
@@ -159,7 +187,7 @@ def clean_bos2010(raw_df, marathon_id, year):
                      u'gender_rank', u'division_rank', u'other1', u'other2',
                      u'other3', u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
-    clean_df['bib'] = raw_df['bib']
+    clean_df['bib'] = map(clean_bib, raw_df['bib'])
     clean_df['marathon'] = marathon_id
     clean_df['year'] = year
     clean_df['url'] = map(lambda url: clean_bos2010url(str(url), year),
@@ -230,7 +258,7 @@ def clean_bos2001(raw_df, marathon_id, year):
                      u'division_rank', u'other1', u'other2', u'other3',
                      u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
-    clean_df['bib'] = raw_df['bib']
+    clean_df['bib'] = map(clean_bib, raw_df['bib'])
     clean_df['marathon'] = marathon_id
     clean_df['year'] = year
     clean_df['url'] = blank_str
@@ -277,11 +305,32 @@ def clean_bos2001(raw_df, marathon_id, year):
     return clean_df
 
 
+def filter_runners(df):
+    """Filters out undesired records for our analysis.
+
+    Criteria : ['subgroup'] not in {'WHEELCHAIR', 'HANDCYCLE}
+
+    Parameters
+    ----------
+    df : DataFrame
+
+    Returns
+    -------
+    filtered_df : DataFrame
+    """
+    filtered_df = df[~df['subgroup'].isin(['WHEELCHAIR', 'HANDCYCLE'])]
+    return filtered_df
+
+
 def batch_clean_2010(file_list, years, folder='data', name='boston'):
     for file, year in zip(file_list, years):
+        # Import raw file
         raw_df = pd.read_csv(folder+'/'+file)
+        # Converts raw data into "Standardized" Clean DataFrame
         clean_df = clean_bos2010(raw_df, name, year)
-        # print clean_df.sample(n=3).T
+        # Filter out records
+        clean_df = filter_runners(clean_df)
+        # Save clean csv file
         filename = folder+'/'+name+str(year)+'_clean.csv'
         print year, 'saved as', filename
         clean_df.to_csv(filename, index=False)
@@ -289,9 +338,13 @@ def batch_clean_2010(file_list, years, folder='data', name='boston'):
 
 def batch_clean_2001(file_list, years, folder='data', name='boston'):
     for file, year in zip(file_list, years):
+        # Import raw file
         raw_df = pd.read_csv(folder+'/'+file)
+        # Converts raw data into "Standardized" Clean DataFrame
         clean_df = clean_bos2001(raw_df, name, year)
-        # print clean_df.sample(n=3).T
+        # Filter out records
+        clean_df = filter_runners(clean_df)
+        # Save clean csv file
         filename = folder+'/'+name+str(year)+'_clean.csv'
         print year, 'saved as', filename
         clean_df.to_csv(filename, index=False)
