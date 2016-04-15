@@ -187,9 +187,36 @@ def fetch_weather_features(marathon_name, year):
     return avgtemp, avghumid, avgwind, avgwindE, avgwindN, isgusty, rainhours
 
 
+def add_features(df):
+    """Add features to existing dataframe
+
+    Parameters
+    df : DataFrame
+
+    Returns
+    augmented_df : Data Frame
+    """
+    # Features to include from each marathon
+    augmented_df = df[['marathon', 'year', 'firstname', 'bib', 'age',
+                       'gender', 'state', 'country', 'timehalf',
+                       'offltime']].copy()
+    # Add weather columns
+    marathon_name = augmented_df['marathon'].iloc[0]
+    year = augmented_df['year'].iloc[0]
+    avgtemp, avghumid, avgwind, avgwindE, avgwindN, isgusty, rainhours \
+        = fetch_weather_features(marathon_name, year)
+    augmented_df['avgtemp'] = avgtemp
+    augmented_df['avghumid'] = avghumid
+    augmented_df['avgwind'] = avgwind
+    augmented_df['avgwindE'] = avgwindE
+    augmented_df['avgwindN'] = avgwindN
+    augmented_df['isgusty'] = isgusty
+    augmented_df['rainhours'] = rainhours
+    return augmented_df
+
+
 def sample_estimator(df, gender, age):
-    """Randomly sample rows from a specific estimator.  Add in weather
-    data.
+    """Randomly sample rows from a specific estimator.  Add in more features.
 
     Parameters
     ----------
@@ -202,24 +229,7 @@ def sample_estimator(df, gender, age):
     estimator_df = df[(df['gender'] == gender) & (df['age'] == age)]
     sample_df = estimator_df.sample(n=SAMPLE_SIZE, replace=True,
                                     random_state=42)
-
-    # Features to include from each marathon
-    sample_df = sample_df[['marathon', 'year', 'firstname', 'bib', 'age',
-                           'gender', 'state', 'country', 'timehalf',
-                           'offltime']]
-    # Add weather columns
-    marathon_name = df.loc[0, 'marathon']
-    year = df.loc[0, 'year']
-    avgtemp, avghumid, avgwind, avgwindE, avgwindN, isgusty, rainhours \
-        = fetch_weather_features(marathon_name, year)
-    sample_df['avgtemp'] = avgtemp
-    sample_df['avghumid'] = avghumid
-    sample_df['avgwind'] = avgwind
-    sample_df['avgwindE'] = avgwindE
-    sample_df['avgwindN'] = avgwindN
-    sample_df['isgusty'] = isgusty
-    sample_df['rainhours'] = rainhours
-
+    sample_df = add_features(sample_df)
     return sample_df
 
 
@@ -251,6 +261,7 @@ SAMPLE_SIZE = 50
 
 weather_file = 'data/marathon_weather.csv'
 weather_df = pd.read_csv(weather_file)
+SAVE_FILENAME = 'boston_combined.csv'
 
 if __name__ == '__main__':
     folder = 'data/'
@@ -263,11 +274,12 @@ if __name__ == '__main__':
                       'boston2003_clean.csv', 'boston2002_clean.csv',
                       'boston2001_clean.csv']
 
-    matching_estimators = pd.DataFrame()
+    output_df = pd.DataFrame()
     for filename in marathon_files:
         print 'Importing', folder+filename
         df = pd.read_csv(folder+filename)
-        matching_estimators = matching_estimators.append(sample_all(df))
-    save_file = folder+'boston_estimators.csv'
+        output_df = output_df.append(add_features(df))
+        #output_df = output_df.append(sample_all(df))
+    save_file = folder+SAVE_FILENAME
     print 'Saving', save_file
-    matching_estimators.to_csv(folder+'boston_estimators.csv', index=False)
+    output_df.to_csv(save_file, index=False)
