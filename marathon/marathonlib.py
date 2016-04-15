@@ -18,13 +18,13 @@ def time_to_minutes(time_string):
 
     Examples
     --------
-    >>> print to_minutes('1:23:45')
+    >>> print time_to_minutes('1:23:45')
     83.75
-    >>> print to_minutes('1:23')
-    1.38333333
-    >>> print to_minutes('hour')
+    >>> print time_to_minutes('1:23')
+    1.38333333333
+    >>> print time_to_minutes('hour')
     0.0
-    >>> print to_minutes('10:00:00')
+    >>> print time_to_minutes('10:00:00')
     600.0
     """
     if type(time_string) in (float, float64):
@@ -46,13 +46,13 @@ def time_to_timestring(time_min):
     OUTPUT:
         string, time in 'hh:mm:ss' format
     Example:
-    >>> print to_timestring(0)
+    >>> print time_to_timestring(0)
     0:00:00
-    >>> print to_timestring(83.75)
+    >>> print time_to_timestring(83.75)
     1:23:45
-    >>> print to_timestring(1.38333333333)
+    >>> print time_to_timestring(1.38333333333)
     0:01:23
-    >>> print to_timestring(600)
+    >>> print time_to_timestring(600)
     10:00:00
     """
     hh = int(time_min) / 60
