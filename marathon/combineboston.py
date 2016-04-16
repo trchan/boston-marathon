@@ -329,6 +329,32 @@ def sample_all(df):
     return sample_df
 
 
+def combine_marathon_data(filelist, sample=False):
+    output_df = pd.DataFrame()
+    for filename in marathon_files:
+        print 'Importing', folder+filename
+        df = pd.read_csv(folder+filename)
+        if sample:
+            output_df = output_df.append(sample_all(df))
+        else:
+            output_df = output_df.append(add_features(df))
+    return output_df
+
+
+def create_misc_home(df):
+    print "Binning home category as 'MISC' if <0.1% of records are in the category"
+    df = df.reset_index()
+    n = len(df)
+    count_df = df['home'].value_counts()
+    misc_list = set(count_df[count_df < n / 1000].index)
+    print len(misc_list), "categories converting to 'MISC'"
+
+    df.loc[df['home'].isin(misc_list), 'home'] = 'MISC'
+
+    print sum(df['home']=='MISC'), "records binned as 'MISC'"
+    return df
+
+
 # Estimator Definition, results in 40 x 2 estimators
 AGE_MIN = 21
 AGE_MAX = 60
@@ -350,13 +376,9 @@ if __name__ == '__main__':
                       'boston2005_clean.csv', 'boston2004_clean.csv',
                       'boston2003_clean.csv', 'boston2002_clean.csv',
                       'boston2001_clean.csv']
-
-    output_df = pd.DataFrame()
-    for filename in marathon_files:
-        print 'Importing', folder+filename
-        df = pd.read_csv(folder+filename)
-        output_df = output_df.append(add_features(df))
-        # output_df = output_df.append(sample_all(df))
+    output_df = combine_marathon_data(marathon_files)
+    output_df = create_misc_home(output_df)
     save_file = folder+SAVE_FILENAME
     print 'Saving', save_file
     output_df.to_csv(save_file, index=False)
+    print len(output_df), 'records saved'
