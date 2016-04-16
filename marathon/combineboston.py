@@ -1,5 +1,7 @@
 """Package of methods for merging marathon running data from different
-marathons (time, place).  Using a technique known as Matching Estimators.
+marathons (time, place).  There are two main methods, combine all dataframes
+with new features added, and using Matching Estimators to sample datasets and
+combine.
 """
 
 import pandas as pd
@@ -203,13 +205,13 @@ def find_nonqualifier_start(df):
     bib : integer
         bib number of the first non-qualifier (approximately)
     """
-    def get_variance_differences(df, bibs, interval):
+    def get_variance_differences(df, runners, interval):
         """Calculates variances differences
         Parameters
         ----------
         df : DataFrame
-        bibs : list of integers
-            ordered bib numbers
+        runners : list of integers
+            ordered list of runners by  bib number
         interval : integer
             number of runners to calculate variances on
 
@@ -218,32 +220,43 @@ def find_nonqualifier_start(df):
         variance_differences : list of float
         """
         variance_differences = []
-        for bib in bibs:
-            bibs_before = df['bib'].isin(range(bib-interval, bib))
-            bibs_after = df['bib'].isin(range(bib, bib+interval))
-            difference = np.var(df.loc[bibs_after, 'offltime']) - np.var(df.loc[bibs_before, 'offltime'])
+        for runner in runners:
+            runners_before = df.index.isin(range(runner-interval, runner))
+            runners_after = df.index.isin(range(runner, runner+interval))
+            difference = np.var(df.loc[runners_after, 'offltime']) - \
+                np.var(df.loc[runners_before, 'offltime'])
             variance_differences.append(difference)
         return variance_differences
 
-    # First iteration, do a broad search every 500 bibs, measuring the variance
-    # difference of the 1000 bibs preceding a big number ,compared to 1000 bibs
-    # after (window = 1000).  Find the point of greatest delta variance.
-    bibs = range(df['bib'].min()+500, df['bib'].max()-500, 500)
-    differences = get_variance_differences(df, bibs, 1000)
-    max_bib = bibs[differences.index(max(differences))]
+    def find_max_variance(df, start_ix, end_ix, bin_size):
+        """Searches a dataframe (at a given level of specificity) for the
+        biggest change in variance.
+        """
+        runners = range(start_ix, end_ix, bin_size)
+        var_window = 2 * bin_size
+        # Restricts minimum variance window
+        if var_window < 20:
+            var_window = 20
+        differences = get_variance_differences(df, runners, var_window)
+        return runners[differences.index(max(differences))]
 
+    # Eliminate gaps in the data, by sorting and reindexing.
+    sorted_df = df.sort_values(by='bib')
+    sorted_df.reset_index(inplace=True)
+    # First iteration, do a broad search every 500 runners, measuring the
+    # variance difference of the 1000 runners preceding against the 1000
+    # runners after (window=1000).
+    # Find the point of the biggest change in variance.
+    max_var_runner = find_max_variance(sorted_df, sorted_df.index.min()+500,
+                                       sorted_df.index.max()-500, 500)
     # Second iteration, use the point found above to zoom in.  Search every 50
     # bibs, with a 100 bib variance window.
-    bibs = range(max_bib-1000, max_bib+1000, 50)
-    differences = get_variance_differences(df, bibs, 100)
-    max_bib = bibs[differences.index(max(differences))]
-
-    # Final search, every 5 bibs, with a variance window = 10.  I do not thing
-    # we can get any smaller than this.
-    bibs = range(max_bib-100, max_bib+100, 5)
-    differences = get_variance_differences(df, bibs, 10)
-    max_bib = bibs[differences.index(max(differences))]
-    return max_bib
+    max_var_runner = find_max_variance(sorted_df, max_var_runner-100,
+                                       max_var_runner+100, 50)
+    # Final iteration, search individual runners
+    max_var_runner = find_max_variance(sorted_df, max_var_runner-10,
+                                       max_var_runner+10, 1)
+    return sorted_df.loc[max_var_runner, 'bib']
 
 
 def add_features(df):
@@ -257,10 +270,13 @@ def add_features(df):
     """
     # Features to include from each marathon
     augmented_df = df[['marathon', 'year', 'firstname', 'bib', 'age',
-                       'gender', 'state', 'country', 'timehalf',
-                       'offltime']].copy()
+                       'gender', 'timehalf', 'offltime']].copy()
     # Add runner categories
     augmented_df['elite'] = augmented_df['bib'] <= 100
+    augmented_df['qualifier'] = augmented_df['bib'] < \
+        find_nonqualifier_start(augmented_df)
+    augmented_df['home'] = [state if country == 'USA' else country for
+                            country, state in df[['country', 'state']].values]
     # Add weather columns
     marathon_name = augmented_df['marathon'].iloc[0]
     year = augmented_df['year'].iloc[0]
@@ -340,7 +356,7 @@ if __name__ == '__main__':
         print 'Importing', folder+filename
         df = pd.read_csv(folder+filename)
         output_df = output_df.append(add_features(df))
-        #output_df = output_df.append(sample_all(df))
+        # output_df = output_df.append(sample_all(df))
     save_file = folder+SAVE_FILENAME
     print 'Saving', save_file
     output_df.to_csv(save_file, index=False)
