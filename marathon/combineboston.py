@@ -187,6 +187,65 @@ def fetch_weather_features(marathon_name, year):
     return avgtemp, avghumid, avgwind, avgwindE, avgwindN, isgusty, rainhours
 
 
+def find_nonqualifier_start(df):
+    """Finds the bib number of the first non-qualifier in a seeded marathon.
+
+    This works when qualifying and non-qualifying runners are grouped into two
+    categories, split by bib numbers.  This algorithm finds the dividing line
+    by recursively by looking for a big change in variance of the finish times.
+
+    Parameters
+    ----------
+    df : DataFrame
+
+    Returns
+    -------
+    bib : integer
+        bib number of the first non-qualifier (approximately)
+    """
+    def get_variance_differences(df, bibs, interval):
+        """Calculates variances differences
+        Parameters
+        ----------
+        df : DataFrame
+        bibs : list of integers
+            ordered bib numbers
+        interval : integer
+            number of runners to calculate variances on
+
+        Returns
+        -------
+        variance_differences : list of float
+        """
+        variance_differences = []
+        for bib in bibs:
+            bibs_before = df['bib'].isin(range(bib-interval, bib))
+            bibs_after = df['bib'].isin(range(bib, bib+interval))
+            difference = np.var(df.loc[bibs_after, 'offltime']) - np.var(df.loc[bibs_before, 'offltime'])
+            variance_differences.append(difference)
+        return variance_differences
+
+    # First iteration, do a broad search every 500 bibs, measuring the variance
+    # difference of the 1000 bibs preceding a big number ,compared to 1000 bibs
+    # after (window = 1000).  Find the point of greatest delta variance.
+    bibs = range(df['bib'].min()+500, df['bib'].max()-500, 500)
+    differences = get_variance_differences(df, bibs, 1000)
+    max_bib = bibs[differences.index(max(differences))]
+
+    # Second iteration, use the point found above to zoom in.  Search every 50
+    # bibs, with a 100 bib variance window.
+    bibs = range(max_bib-1000, max_bib+1000, 50)
+    differences = get_variance_differences(df, bibs, 100)
+    max_bib = bibs[differences.index(max(differences))]
+
+    # Final search, every 5 bibs, with a variance window = 10.  I do not thing
+    # we can get any smaller than this.
+    bibs = range(max_bib-100, max_bib+100, 5)
+    differences = get_variance_differences(df, bibs, 10)
+    max_bib = bibs[differences.index(max(differences))]
+    return max_bib
+
+
 def add_features(df):
     """Add features to existing dataframe
 
@@ -200,6 +259,8 @@ def add_features(df):
     augmented_df = df[['marathon', 'year', 'firstname', 'bib', 'age',
                        'gender', 'state', 'country', 'timehalf',
                        'offltime']].copy()
+    # Add runner categories
+    augmented_df['elite'] = augmented_df['bib'] <= 100
     # Add weather columns
     marathon_name = augmented_df['marathon'].iloc[0]
     year = augmented_df['year'].iloc[0]
