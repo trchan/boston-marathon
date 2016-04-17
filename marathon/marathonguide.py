@@ -151,7 +151,7 @@ def fetch_marathon_runners(midd):
         = get_marathon_info(response.text)
 
     print 'Fetching', marathon_name
-    print marathon_city, ',', marathon_date
+    print marathon_city, marathon_date
     print 'MIDD:', midd
 
     runners = []
