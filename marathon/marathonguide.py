@@ -233,14 +233,13 @@ def get_year(date):
     return int(year_string)
 
 
-def find_all_midds(searchyear):
+def find_all_midds(searchyear, csv_folder):
     """Compiles MIDD and weather index files for a given year.  These files
     provide a list of marathons/weather to scrape.
 
     To generate a list of all the marathons/MIDDs for 2015:
     > marathonguide.find_all_midds(2015)
     """
-    csv_folder = 'data/'
     weather_filename = csv_folder+str(searchyear)+'marathon_weather.csv'
     midd_filename = csv_folder+str(searchyear)+'midd_list.csv'
 
@@ -294,4 +293,10 @@ def scrape_marathons(folder, midd_file):
 
 
 if __name__ == "__main__":
-    scrape_marathons('data/marathonguide/', 'problem_midd_list.csv')
+    # This command searches marathonguide.com for a list of marathons
+    # It saves the information by creating a 2016_weather.csv and a
+    # 2016_midd_list.csv file.
+    # find_all_midds(2016, 'data/')
+
+    # This command uses a midd_list to scrape marathons
+    # scrape_marathons('data/marathonguide/', 'problem_midd_list.csv')
