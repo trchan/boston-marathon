@@ -293,6 +293,7 @@ def scrape_marathons(folder, midd_file):
 
 
 if __name__ == "__main__":
+    pass
     # This command searches marathonguide.com for a list of marathons
     # It saves the information by creating a 2016_weather.csv and a
     # 2016_midd_list.csv file.
