@@ -42,7 +42,6 @@ def get_runners_searchpage(s, midd, params):
         row_data = [cell.text.strip() for cell in cells]
         if len(row_data) == 9:
             runners.append(row_data)
-    print len(runners)
     return runners
 
 
@@ -113,7 +112,7 @@ def find_midds(html):
     return midd_list
 
 
-def fetch_marathon_searchpage(midd):
+def fetch_marathon_runners(midd):
     """Retrieves the home search page for a given marathon
     """
     home_url = 'http://www.marathonguide.com/results/browse.cfm'
@@ -133,8 +132,10 @@ def fetch_marathon_searchpage(midd):
                 'AGTime', 'BQ']]
     for params in search_params:
         runners.extend(get_runners_searchpage(s, midd, params))
+        print '.',
+        time.sleep(1)
     s.close()
-    print len(runners)
+    return runners
 
 
 def clean_marathon_name(name):
