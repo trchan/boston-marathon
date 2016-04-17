@@ -261,10 +261,8 @@ def find_all_midds(searchyear):
     weather_df.to_csv(weather_filename, index=False)
 
 
-if __name__ == "__main__":
-    folder = 'data/marathonguide/'
-    scrape_df = pd.read_csv(folder+'test_midd_list.csv')
-    # scrape_df = pd.read_csv('data/2015midd_list.csv')
+def scrape_marathons(folder, midd_file):
+    scrape_df = pd.read_csv(folder+midd_file)
     for marathon in scrape_df.iterrows():
         marathon_name = marathon[1]['marathon']
         year = marathon[1]['year']
@@ -272,3 +270,7 @@ if __name__ == "__main__":
         marathon_df = fetch_marathon_runners(midd)
         marathon_df.to_csv(folder+marathon_name+str(year)+'raw.csv',
                            index=False)
+
+
+if __name__ == "__main__":
+    scrape_marathons('data/marathonguide/', 'test_midd_list.csv')
