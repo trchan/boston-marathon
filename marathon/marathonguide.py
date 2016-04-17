@@ -42,7 +42,7 @@ def get_runners_searchpage(s, midd, params):
         cells = row.find_all('td')
         row_data = [cell.text.strip().encode('ascii', 'replace')
                     for cell in cells]
-        if len(row_data) == 9:
+        if len(row_data) in [5, 9]:
             runners.append(row_data)
     return runners
 
@@ -145,11 +145,14 @@ def fetch_marathon_runners(midd):
         stdout.flush()
         sleep(0.2)
     s.close()
-    print
+    print '\r{0:.0f}%'.format(len(runners)*100. / (total_runners-1))
     runners_df = pd.DataFrame(runners)
-    runners_df.columns = ['Last Name/First Name (Sex/Age)', 'Time',
-                          'OverallRank', 'GenderRank/DivRank', 'DIV',
-                          'NetTime', 'State/Country', 'AGTime', 'BQ']
+    if len(runners_df.columns) == 5:
+        runners_df.columns = ['Last Name, First Name (Sex/Age)', 'Time', 'OverAll', 'OverallRank', 'GenderRank', 'AGTime']
+    elif len(runners_df.columns) == 9:
+        runners_df.columns = ['Last Name/First Name (Sex/Age)', 'Time',
+                              'OverallRank', 'GenderRank/DivRank', 'DIV',
+                              'NetTime', 'State/Country', 'AGTime', 'BQ']
     return runners_df
 
 
