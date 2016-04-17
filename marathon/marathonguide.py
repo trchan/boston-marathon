@@ -253,4 +253,5 @@ if __name__ == "__main__":
         year = marathon[1]['year']
         midd = marathon[1]['midd']
         runners = fetch_marathon_searchpage(midd)
-        runners.to_csv('data/'+marathon_name+year+'raw.csv')
+        marathon_df = pd.DataFrame(runners)
+        marathon_df.to_csv('data/'+marathon_name+year+'raw.csv')
