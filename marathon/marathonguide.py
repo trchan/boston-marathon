@@ -161,13 +161,14 @@ def fetch_marathon_runners(midd):
         if not header:
             header = get_searchpage_header(s, midd, params)
         runners.extend(get_searchpage_runners(s, midd, params))
-        print '\r{0:.0f}%'.format(len(runners)*100. / (total_runners-1)),
+        print '\r{0:.0f}%'.format(len(runners)*100. / total_runners),
         stdout.flush()
         sleep(0.2)
     s.close()
-    print '\r{0:.0f}%'.format(len(runners)*100. / (total_runners-1))
+    print '\r{0:.0f}%'.format(len(runners)*100. / total_runners)
     print '# of runners:', len(runners)
-    print '# of columns:', len(runners[0])
+    if len(runners) != 0:
+        print '# of columns:', len(runners[0])
     runners_df = pd.DataFrame(runners)
     runners_df.columns = header
     return runners_df
