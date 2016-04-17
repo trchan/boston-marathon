@@ -14,7 +14,8 @@ import pandas as pd
 from collections import deque
 from string import punctuation
 from datetime import datetime
-import time
+from time import sleep
+from sys import stdout
 
 
 def get_runners_searchpage(s, midd, params):
@@ -39,7 +40,8 @@ def get_runners_searchpage(s, midd, params):
     rows = table.find_all('tr')
     for row in rows:
         cells = row.find_all('td')
-        row_data = [cell.text.strip() for cell in cells]
+        row_data = [cell.text.strip().encode('ascii', 'replace')
+                    for cell in cells]
         if len(row_data) == 9:
             runners.append(row_data)
     return runners
@@ -114,6 +116,14 @@ def find_midds(html):
 
 def fetch_marathon_runners(midd):
     """Retrieves the home search page for a given marathon
+    Parameters
+    ----------
+    midd : integer
+        marathonguide.com database id code
+
+    Returns
+    -------
+    runners_df : DataFrame
     """
     home_url = 'http://www.marathonguide.com/results/browse.cfm'
     home_parameters = {'MIDD': midd}
@@ -126,16 +136,21 @@ def fetch_marathon_runners(midd):
     print 'Fetching', marathon_name
     print marathon_city, ',', marathon_date
 
+    runners = []
     search_params = find_search_params(response.text)
-    runners = [['Last Name/First Name (Sex/Age)', 'Time', 'OverallRank',
-                'GenderRank/DivRank', 'DIV', 'NetTime', 'State/Country',
-                'AGTime', 'BQ']]
     for params in search_params:
+        total_runners = int(params.split(',')[-1])
         runners.extend(get_runners_searchpage(s, midd, params))
-        print runners[-1]
-        time.sleep(1)
+        print '\r{0:.0f}%'.format(len(runners)*100. / (total_runners-1)),
+        stdout.flush()
+        sleep(0.2)
     s.close()
-    return runners
+    print
+    runners_df = pd.DataFrame(runners)
+    runners_df.columns = ['Last Name/First Name (Sex/Age)', 'Time',
+                          'OverallRank', 'GenderRank/DivRank', 'DIV',
+                          'NetTime', 'State/Country', 'AGTime', 'BQ']
+    return runners_df
 
 
 def clean_marathon_name(name):
@@ -223,7 +238,7 @@ def find_all_midds(searchyear):
         midd = midds.popleft()
         if midd not in visited:
             home_parameters = {'MIDD': midd}
-            time.sleep(1)
+            sleep(0.5)
             response = s.get(home_url, params=home_parameters)
             visited.add(midd)
             marathon_name, city, date = get_marathon_info(response.text)
@@ -247,11 +262,13 @@ def find_all_midds(searchyear):
 
 
 if __name__ == "__main__":
-    scrape_df = pd.read_csv('data/2015midd_list.csv')
+    folder = 'data/marathonguide/'
+    scrape_df = pd.read_csv(folder+'test_midd_list.csv')
+    # scrape_df = pd.read_csv('data/2015midd_list.csv')
     for marathon in scrape_df.iterrows():
         marathon_name = marathon[1]['marathon']
         year = marathon[1]['year']
         midd = marathon[1]['midd']
-        runners = fetch_marathon_searchpage(midd)
-        marathon_df = pd.DataFrame(runners)
-        marathon_df.to_csv('data/'+marathon_name+year+'raw.csv')
+        marathon_df = fetch_marathon_runners(midd)
+        marathon_df.to_csv(folder+marathon_name+str(year)+'raw.csv',
+                           index=False)
