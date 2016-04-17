@@ -14,6 +14,7 @@ import pandas as pd
 from collections import deque
 from string import punctuation
 from datetime import datetime
+import time
 
 
 def get_runners_searchpage(s, midd, params):
@@ -202,6 +203,10 @@ def find_all_midds(searchyear):
     To generate a list of all the marathons/MIDDs for 2015:
     > marathonguide.find_all_midds(2015)
     """
+    csv_folder = 'data/'
+    weather_filename = csv_folder+str(searchyear)+'marathon_weather.csv'
+    midd_filename = csv_folder+str(searchyear)+'midd_list.csv'
+
     url = 'http://www.marathonguide.com/results/browse.cfm?Year=' + \
           str(searchyear)
     s = requests.Session()
@@ -217,6 +222,7 @@ def find_all_midds(searchyear):
         midd = midds.popleft()
         if midd not in visited:
             home_parameters = {'MIDD': midd}
+            time.sleep(1)
             response = s.get(home_url, params=home_parameters)
             visited.add(midd)
             marathon_name, city, date = get_marathon_info(response.text)
@@ -233,10 +239,10 @@ def find_all_midds(searchyear):
     s.close()
     print 'Saving', len(midd_df), 'records.'
     midd_df.columns = ['marathon', 'year', 'midd']
-    midd_df.to_csv('data/marathonguide/midd_list.csv', index=False)
+    midd_df.to_csv(midd_filename, index=False)
     weather_df.columns = ['marathon', 'year', 'date', 'startcity', 'endcity',
                           'starthour', 'endhour']
-    weather_df.to_csv('data/marathonguide/marathons_weather.csv', index=False)
+    weather_df.to_csv(weather_filename, index=False)
 
 
 if __name__ == "__main__":
