@@ -152,6 +152,7 @@ def fetch_marathon_runners(midd):
 
     print 'Fetching', marathon_name
     print marathon_city, ',', marathon_date
+    print 'MIDD:', midd
 
     runners = []
     search_params = find_search_params(response.text)
@@ -167,10 +168,9 @@ def fetch_marathon_runners(midd):
     s.close()
     print '\r{0:.0f}%'.format(len(runners)*100. / total_runners)
     print '# of runners:', len(runners)
-    if len(runners) != 0:
-        print '# of columns:', len(runners[0])
     runners_df = pd.DataFrame(runners)
-    runners_df.columns = header
+    if len(runners) > 0:
+        runners_df.columns = header
     return runners_df
 
 
@@ -292,4 +292,4 @@ def scrape_marathons(folder, midd_file):
 
 
 if __name__ == "__main__":
-    scrape_marathons('data/marathonguide/', 'test_midd_list.csv')
+    scrape_marathons('data/marathonguide/', 'problem_midd_list.csv')
