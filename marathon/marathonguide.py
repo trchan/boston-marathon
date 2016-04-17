@@ -18,7 +18,7 @@ from time import sleep
 from sys import stdout
 
 
-def get_runners_searchpage(s, midd, params):
+def get_searchpage(s, midd, params):
     rp = 'http://www.marathonguide.com/results/makelinks.cfm'
     data = {'RaceRange': params,
             'RaceRange_Required': 'You must make a selection before viewing \
@@ -30,9 +30,26 @@ def get_runners_searchpage(s, midd, params):
         "http://www.marathonguide.com/results/browse.cfm?MIDD"+str(midd),
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4)\
     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36"}
-
     results = s.post(rp, data=data, headers=headers)
-    soup = BeautifulSoup(results.text, 'lxml')
+    return results.text
+
+
+def get_searchpage_header(s, midd, params):
+    searchpage = get_searchpage(s, midd, params)
+    soup = BeautifulSoup(searchpage, 'lxml')
+
+    header = []
+    table = soup.find('table', attrs={'border': 1, 'cellspacing': 0,
+                                      'cellpadding': 3})
+    headings = table.find_all('th')
+    for heading in headings:
+        header.append(heading.text.strip().encode('ascii', 'replace'))
+    return header
+
+
+def get_searchpage_runners(s, midd, params):
+    searchpage = get_searchpage(s, midd, params)
+    soup = BeautifulSoup(searchpage, 'lxml')
 
     runners = []
     table = soup.find('table', attrs={'border': 1, 'cellspacing': 0,
@@ -40,9 +57,9 @@ def get_runners_searchpage(s, midd, params):
     rows = table.find_all('tr')
     for row in rows:
         cells = row.find_all('td')
-        row_data = [cell.text.strip().encode('ascii', 'replace')
-                    for cell in cells]
-        if len(row_data) in [5, 9]:
+        row_data = [cell.text.encode('ascii', 'replace').
+                    replace('?', '').strip() for cell in cells]
+        if len(row_data) >= 5:
             runners.append(row_data)
     return runners
 
@@ -138,21 +155,21 @@ def fetch_marathon_runners(midd):
 
     runners = []
     search_params = find_search_params(response.text)
+    header = None
     for params in search_params:
         total_runners = int(params.split(',')[-1])
-        runners.extend(get_runners_searchpage(s, midd, params))
+        if not header:
+            header = get_searchpage_header(s, midd, params)
+        runners.extend(get_searchpage_runners(s, midd, params))
         print '\r{0:.0f}%'.format(len(runners)*100. / (total_runners-1)),
         stdout.flush()
         sleep(0.2)
     s.close()
     print '\r{0:.0f}%'.format(len(runners)*100. / (total_runners-1))
+    print '# of runners:', len(runners)
+    print '# of columns:', len(runners[0])
     runners_df = pd.DataFrame(runners)
-    if len(runners_df.columns) == 5:
-        runners_df.columns = ['Last Name, First Name (Sex/Age)', 'Time', 'OverAll', 'OverallRank', 'GenderRank', 'AGTime']
-    elif len(runners_df.columns) == 9:
-        runners_df.columns = ['Last Name/First Name (Sex/Age)', 'Time',
-                              'OverallRank', 'GenderRank/DivRank', 'DIV',
-                              'NetTime', 'State/Country', 'AGTime', 'BQ']
+    runners_df.columns = header
     return runners_df
 
 
@@ -249,8 +266,6 @@ def find_all_midds(searchyear):
             city = clean_marathon_city(city)
             year = get_year(date)
             date = clean_date(date)
-            # Use line below if you want to recursively pull all years
-            # midds.append(find_midds(response.text))
             midd_df = midd_df.append([[marathon_name, year, midd]])
             weather_df = weather_df.append([[marathon_name, year, date, city,
                                             city, 10, 16]])
