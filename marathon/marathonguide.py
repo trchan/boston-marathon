@@ -287,8 +287,10 @@ def scrape_marathons(folder, midd_file):
         year = marathon[1]['year']
         midd = marathon[1]['midd']
         marathon_df = fetch_marathon_runners(midd)
-        marathon_df.to_csv(folder+marathon_name+str(year)+'raw.csv',
-                           index=False)
+        if len(marathon_df) > 0:
+            marathon_df['midd'] = midd
+            marathon_df.to_csv(folder+marathon_name+str(year)+'raw.csv',
+                               index=False)
 
 
 if __name__ == "__main__":
