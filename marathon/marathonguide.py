@@ -132,7 +132,7 @@ def fetch_marathon_runners(midd):
                 'AGTime', 'BQ']]
     for params in search_params:
         runners.extend(get_runners_searchpage(s, midd, params))
-        print '.',
+        print runners[-1]
         time.sleep(1)
     s.close()
     return runners
@@ -247,10 +247,10 @@ def find_all_midds(searchyear):
 
 
 if __name__ == "__main__":
-    scrape_df = pd.read_csv('data/marathonguide/midd_list.csv')
+    scrape_df = pd.read_csv('data/2015midd_list.csv')
     for marathon in scrape_df.iterrows():
         marathon_name = marathon[1]['marathon']
         year = marathon[1]['year']
         midd = marathon[1]['midd']
-        fetch_marathon_searchpage(midd)
-        # save to csv file marathon_name_year_raw.csv
+        runners = fetch_marathon_searchpage(midd)
+        runners.to_csv('data/'+marathon_name+year+'raw.csv')
