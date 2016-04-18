@@ -32,6 +32,20 @@ from sys import stdout
 
 
 def get_searchpage(s, midd, params):
+    """Returns the HTML page for a single request for marathon data (max 100
+    runners, as specified by params)
+    Parameters
+    ----------
+    s : requests.session() object
+    midd : integer
+        numerical index of the marathon
+    params : string
+        search parameters to pass to the GET command
+
+    Returns
+    -------
+    results.text : string
+    """
     rp = 'http://www.marathonguide.com/results/makelinks.cfm'
     data = {'RaceRange': params,
             'RaceRange_Required': 'You must make a selection before viewing \
@@ -106,10 +120,12 @@ def get_searchpage_runners(s, midd, params):
 
 
 def find_search_params(html):
-    """Finds and returns all the possible search queries
+    """Parses html and returns all possible search queries looking for both
+    genders 'B'.
+
     Parameters
     ----------
-    html
+    html : string
 
     Returns
     -------
