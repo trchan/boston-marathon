@@ -2,7 +2,7 @@
 #
 # Script takes a csv file consisting of raw data extracted from html tables
 # and converts all the different formats to ONE FORMAT.  This includes
-# cleaning the data.
+# cleaning the data, but not overprocessing it.
 # Homogeneous format required.
 # |  fieldname    | type     | description |
 # |---------------|----------|-------------|
@@ -160,7 +160,8 @@ def clean_bos2010url(raw_url, year):
 
 def clean_bos2010(raw_df, marathon_id, year):
     '''Cleans data from a DataFrame containing a raw extract from the HTML.
-    Clean DataFrame is standardized across marathons.
+    Clean DataFrame is standardized across marathons.  Works when raw_df is
+    from 2010-2016 Boston marathon website.
     INPUT
         DataFrame
         marathon_id: string
@@ -234,7 +235,8 @@ def clean_bos2010(raw_df, marathon_id, year):
 
 def clean_bos2001(raw_df, marathon_id, year):
     '''Cleans data from a DataFrame containing a raw extract from the HTML.
-    Clean DataFrame is standardized across marathons.
+    Clean DataFrame is standardized across marathons.  Works when raw_df is
+    from 2001-2009 Boston marathon website.
     INPUT
         DataFrame
     OUTPUT
@@ -353,8 +355,9 @@ def batch_clean_2001(file_list, years, folder='data', name='boston'):
 if __name__ == '__main__':
     file_list = ['bos10_marathon.csv', 'bos11_marathon.csv',
                  'bos12_marathon.csv', 'bos13_marathon.csv',
-                 'bos14_marathon.csv', 'bos15_marathon.csv']
-    years = [2010, 2011, 2012, 2013, 2014, 2015]
+                 'bos14_marathon.csv', 'bos15_marathon.csv',
+                 'bos16_marathon.csv']
+    years = [2010, 2011, 2012, 2013, 2014, 2015, 2016]
     batch_clean_2010(file_list, years, folder='data', name='boston')
 
     file_list = ['bos01_marathon.csv', 'bos02_marathon.csv',
