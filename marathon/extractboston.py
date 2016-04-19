@@ -5,11 +5,33 @@ import pandas as pd
 
 
 def get_num_runners(content):
+    """Parses an html file and returns the number of running records
+
+    Parameters
+    ----------
+    content : string
+        HTML
+
+    Returns
+    -------
+    num_runners : integer
+    """
     soup = BeautifulSoup(content, 'lxml')
     return len(soup.find_all(name='tr', attrs={'class': 'tr_header'}))
 
 
 def get_runner_names(content):
+    """Parses an html file and returns the names of the runners
+
+    Parameters
+    ----------
+    content : string
+        HTML
+
+    Returns
+    -------
+    names : list of string
+    """
     column_names = ['bib', 'name', 'age', 'gender', 'city', 'state', 'country',
                     'ctz']
     soup = BeautifulSoup(content, 'lxml')
@@ -71,11 +93,13 @@ def extract_to_CSV(collections, column_names, directory='data/', geturl=True):
         print 'Saving to', filename
         df.to_csv(filename, index=False, encoding='UTF-8')
 
+
 if __name__ == '__main__':
     print 'Extracts HTML stored in MongoDB collections to .csv file'
     print 'Press [ENTER] to start extractions'
     _ = raw_input()
-    collections = ['bos15', 'bos14', 'bos13', 'bos12', 'bos11', 'bos10']
+    collections = ['bos16', 'bos15', 'bos14', 'bos13', 'bos12', 'bos11',
+                   'bos10']
     column_names = ('bib', 'name', 'age', 'gender', 'city', 'state', 'country',
                     'citizenship', 'subgroup', 'url', 'd5k', 'd10k', 'd15k',
                     'd20k', 'half', 'd25k', 'd30k', 'd35k', 'd40k', 'pace',
