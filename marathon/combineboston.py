@@ -273,49 +273,41 @@ def fill_in_missing_splits(df):
     splits = ['starttime', 'time5k', 'time10k', 'time15k', 'time20k',
               'timehalf', 'time25k', 'time30k', 'time35k', 'time40k',
               'offltime']
+    missed_splits_cols = ['miss5k', 'miss10k', 'miss15k', 'miss20k',
+                          'misshalf', 'miss25k', 'miss30k', 'miss35k',
+                          'miss40k']
     split_dist = {'starttime': 0., 'time5k': 5., 'time10k': 10., 'time15k': 15.,
                   'time20k': 20., 'timehalf': 21.098, 'time25k': 25.,
                   'time30k': 30, 'time35k': 35., 'time40k': 40.,
                   'offltime': 42.195}
-    missed_splits_cols = ['miss5k', 'miss10k', 'miss15k', 'miss20k',
-                          'misshalf', 'miss25k', 'miss30k', 'miss35k',
-                          'miss40k']
 
-    def get_interpolated_time(df, ix, last_known_split, next_known_split):
+    def get_interpolated_time(runner, last_known_split, next_known_split):
         '''Returns interpolated time
         '''
         distance = split_dist[next_known_split] - split_dist[last_known_split]
-        time_diff = df.loc[ix, next_known_split] - df.loc[ix, last_known_split]
+        time_diff = runner[next_known_split] - runner[last_known_split]
         pace = time_diff / distance
-        return df.loc[ix, last_known_split] + \
-               pace * (split_dist[split] - split_dist[last_known_split])
+        time_to_interpolate = split_dist[split] - split_dist[last_known_split]
+        return runner[last_known_split] + pace * time_to_interpolate
 
     # Create new columns of boolean indicating missed splits
     df = df.append(pd.DataFrame(columns=missed_splits_cols))
     df[missed_splits_cols] = False
-
     # Iterate through runners
-    for ix in df.index:
+    for ix,runner in df.iterrows():
         # Iterate through splits, find and fill in empty value
         last_known_split = splits[0]
         for split_ix, split in enumerate(splits[1:-1]):
-            if df.loc[ix, split] != 0:
+            if runner[split] != 0:
                 last_known_split = split
-            elif df.loc[ix, split] == 0:
-                # Find next kxown split
+            elif runner[split] == 0:
+                # Find next known split
                 for next_split in splits[split_ix+1:]:
-                    if df.loc[ix, next_split] != 0:
+                    if runner[next_split] != 0:
                         next_known_split = next_split
                         break
                 # Interpolate missing value difference
-                distance = split_dist[next_known_split] - \
-                           split_dist[last_known_split]
-                time_diff = df.loc[ix, next_known_split] - \
-                            df.loc[ix, last_known_split]
-                pace = time_diff / distance
-                df.loc[ix, split] = df.loc[ix, last_known_split] + \
-                                pace * (split_dist[split] - \
-                                split_dist[last_known_split])
+                df.loc[ix, split] = get_interpolated_time(runner,  last_known_split, next_known_split)
                 # Change dummy to record missing split
                 df.loc[ix, missed_splits_cols[split_ix]] = True
     return df
