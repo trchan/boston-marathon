@@ -121,7 +121,6 @@ def get_wind_vector(windspeeds, winddirections):
                'NNE': 0.125, 'ENE': 0.375, 'ESE': 0.625, 'SSE': 0.875,
                'SSW': 1.125, 'WSW': 1.375, 'WNW': 1.625, 'NNW': 1.875,
                'Variable': None, 'Calm': None}
-
     east_winds = []
     north_winds = []
     windspeeds = get_weather_array(windspeeds, 'mph')
@@ -185,7 +184,6 @@ def fetch_weather_features(marathon_name, year):
                                          subset_df['Wind Dir'])
     isgusty = sum(subset_df['Gust Speed'] != '-') > (n / 2)
     rainhours = sum(subset_df['Events'] == 'Rain') / float(n)
-
     return avgtemp, avghumid, avgwind, avgwindE, avgwindN, isgusty, rainhours
 
 
@@ -259,6 +257,70 @@ def find_nonqualifier_start(df):
     return sorted_df.loc[max_var_runner, 'bib']
 
 
+def fill_in_missing_splits(df):
+    """Fills in missing splits with an interpolated value, and creates dummy
+    columns to track missed splits.
+    Parameters
+    ----------
+    df : DataFrame
+        Containing running records
+    Returns
+    -------
+    df : DataFrame
+        Containing running records with interpolated splits and missed split
+        columns
+    """
+    splits = ['starttime', 'time5k', 'time10k', 'time15k', 'time20k',
+              'timehalf', 'time25k', 'time30k', 'time35k', 'time40k',
+              'offltime']
+    split_dist = {'starttime': 0., 'time5k': 5., 'time10k': 10., 'time15k': 15.,
+                  'time20k': 20., 'timehalf': 21.098, 'time25k': 25.,
+                  'time30k': 30, 'time35k': 35., 'time40k': 40.,
+                  'offltime': 42.195}
+    missed_splits_cols = ['miss5k', 'miss10k', 'miss15k', 'miss20k',
+                          'misshalf', 'miss25k', 'miss30k', 'miss35k',
+                          'miss40k']
+
+    def get_interpolated_time(df, ix, last_known_split, next_known_split):
+        '''Returns interpolated time
+        '''
+        distance = split_dist[next_known_split] - split_dist[last_known_split]
+        time_diff = df.loc[ix, next_known_split] - df.loc[ix, last_known_split]
+        pace = time_diff / distance
+        return df.loc[ix, last_known_split] + \
+               pace * (split_dist[split] - split_dist[last_known_split])
+
+    # Create new columns of boolean indicating missed splits
+    df = df.append(pd.DataFrame(columns=missed_splits_cols))
+    df[missed_splits_cols] = False
+
+    # Iterate through runners
+    for ix in df.index:
+        # Iterate through splits, find and fill in empty value
+        last_known_split = splits[0]
+        for split_ix, split in enumerate(splits[1:-1]):
+            if df.loc[ix, split] != 0:
+                last_known_split = split
+            elif df.loc[ix, split] == 0:
+                # Find next kxown split
+                for next_split in splits[split_ix+1:]:
+                    if df.loc[ix, next_split] != 0:
+                        next_known_split = next_split
+                        break
+                # Interpolate missing value difference
+                distance = split_dist[next_known_split] - \
+                           split_dist[last_known_split]
+                time_diff = df.loc[ix, next_known_split] - \
+                            df.loc[ix, last_known_split]
+                pace = time_diff / distance
+                df.loc[ix, split] = df.loc[ix, last_known_split] + \
+                                pace * (split_dist[split] - \
+                                split_dist[last_known_split])
+                # Change dummy to record missing split
+                df.loc[ix, missed_splits_cols[split_ix]] = True
+    return df
+
+
 def add_features(df):
     """Add features to existing dataframe
 
@@ -277,6 +339,9 @@ def add_features(df):
         find_nonqualifier_start(augmented_df)
     augmented_df['home'] = [state if country == 'USA' else country for
                             country, state in df[['country', 'state']].values]
+    # Manipulate running data
+    augmented_df = fill_in_missing_splits(augmented_df)
+
     # Add weather columns
     marathon_name = augmented_df['marathon'].iloc[0]
     year = augmented_df['year'].iloc[0]
@@ -306,7 +371,6 @@ def sample_estimator(df, gender, age):
     estimator_df = df[(df['gender'] == gender) & (df['age'] == age)]
     sample_df = estimator_df.sample(n=SAMPLE_SIZE, replace=True,
                                     random_state=42)
-    sample_df = add_features(sample_df)
     return sample_df
 
 
@@ -335,14 +399,16 @@ def combine_marathon_data(filelist, sample=False):
         print 'Importing', folder+filename
         df = pd.read_csv(folder+filename)
         if sample:
-            output_df = output_df.append(sample_all(df))
+            sample_df = sample_all(df)
+            output_df = output_df.append(add_features(sample_df))
         else:
             output_df = output_df.append(add_features(df))
     return output_df
 
 
 def create_misc_home(df):
-    print "Binning home category as 'MISC' if <0.1% of records are in the category"
+    print "Binning home category as 'MISC' if <0.1% of records are in the \
+           category"
     df = df.reset_index()
     n = len(df)
     count_df = df['home'].value_counts()
@@ -351,7 +417,7 @@ def create_misc_home(df):
 
     df.loc[df['home'].isin(misc_list), 'home'] = 'MISC'
 
-    print sum(df['home']=='MISC'), "records binned as 'MISC'"
+    print sum(df['home'] == 'MISC'), "records binned as 'MISC'"
     return df
 
 
@@ -377,6 +443,7 @@ if __name__ == '__main__':
                       'boston2003_clean.csv', 'boston2002_clean.csv',
                       'boston2001_clean.csv']
     output_df = combine_marathon_data(marathon_files)
+    # Final processing
     output_df = create_misc_home(output_df)
     save_file = folder+SAVE_FILENAME
     print 'Saving', save_file
