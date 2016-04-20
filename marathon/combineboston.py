@@ -405,8 +405,7 @@ def combine_marathon_data(filelist, sample=False):
 
 
 def create_misc_home(df):
-    print "Binning home category as 'MISC' if <0.1% of records are in the \
-           category"
+    print "Binning home category as 'MISC' if size <0.1% of all records"
     df = df.reset_index()
     n = len(df)
     count_df = df['home'].value_counts()
