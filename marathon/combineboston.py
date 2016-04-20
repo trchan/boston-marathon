@@ -276,10 +276,10 @@ def fill_in_missing_splits(df):
     missed_splits_cols = ['miss5k', 'miss10k', 'miss15k', 'miss20k',
                           'misshalf', 'miss25k', 'miss30k', 'miss35k',
                           'miss40k']
-    split_dist = {'starttime': 0., 'time5k': 5., 'time10k': 10., 'time15k': 15.,
-                  'time20k': 20., 'timehalf': 21.098, 'time25k': 25.,
-                  'time30k': 30, 'time35k': 35., 'time40k': 40.,
-                  'offltime': 42.195}
+    split_dist = {'starttime': 0., 'time5k': 5., 'time10k': 10.,
+                  'time15k': 15., 'time20k': 20., 'timehalf': 21.098,
+                  'time25k': 25., 'time30k': 30, 'time35k': 35.,
+                  'time40k': 40., 'offltime': 42.195}
 
     def get_interpolated_time(runner, split, last_known_split,
                               next_known_split):
@@ -296,7 +296,7 @@ def fill_in_missing_splits(df):
     for newcol in missed_splits_cols:
         df[newcol] = False
     # Iterate through runners
-    for ix,runner in df.iterrows():
+    for ix, runner in df.iterrows():
         # Iterate through splits, find and fill in empty value
         last_known_split = splits[0]
         for split_ix, split in enumerate(splits[1:-1]):
@@ -309,8 +309,9 @@ def fill_in_missing_splits(df):
                         next_known_split = next_split
                         break
                 # Interpolate missing value difference
-                df.loc[ix, split] = get_interpolated_time(runner, split,
-                last_known_split, next_known_split)
+                df.loc[ix, split] = \
+                    get_interpolated_time(runner, split, last_known_split,
+                                          next_known_split)
                 # Change dummy to record missing split
                 df.loc[ix, missed_splits_cols[split_ix]] = True
     return df
