@@ -291,14 +291,15 @@ def fill_in_missing_splits(df):
         return runner[last_known_split] + pace * time_to_interpolate
 
     # Create new columns of boolean indicating missed splits
-    df = df.append(pd.DataFrame(columns=missed_splits_cols))
-    df[missed_splits_cols] = False
+    # df = df.append(pd.DataFrame(columns=missed_splits_cols))
+    for newcol in missed_splits_cols:
+        df[newcol] = False
     # Iterate through runners
     for ix,runner in df.iterrows():
         # Iterate through splits, find and fill in empty value
         last_known_split = splits[0]
         for split_ix, split in enumerate(splits[1:-1]):
-            if runner[split] != 0:
+            if runner[split] > 0:
                 last_known_split = split
             elif runner[split] == 0:
                 # Find next known split
@@ -324,7 +325,9 @@ def add_features(df):
     """
     # Features to include from each marathon
     augmented_df = df[['marathon', 'year', 'firstname', 'bib', 'age',
-                       'gender', 'timehalf', 'offltime']].copy()
+                       'gender', 'offltime', 'starttime', 'time5k', 'time10k',
+                       'time15k', 'time20k', 'timehalf', 'time25k', 'time30k',
+                       'time35k', 'time40k']].copy()
     # Add runner categories
     augmented_df['elite'] = augmented_df['bib'] <= 100
     augmented_df['qualifier'] = augmented_df['bib'] < \
@@ -420,12 +423,12 @@ GENDERS = (True, False)
 AGES = range(AGE_MIN, AGE_MAX+1, 1)
 SAMPLE_SIZE = 50
 
-weather_file = 'data/marathon_weather.csv'
-weather_df = pd.read_csv(weather_file)
+folder = 'data/'
+weather_file = 'marathon_weather.csv'
+weather_df = pd.read_csv(folder+weather_file)
 SAVE_FILENAME = 'boston_combined.csv'
 
 if __name__ == '__main__':
-    folder = 'data/'
     marathon_files = ['boston2015_clean.csv', 'boston2014_clean.csv',
                       'boston2013_clean.csv', 'boston2012_clean.csv',
                       'boston2011_clean.csv', 'boston2010_clean.csv',
