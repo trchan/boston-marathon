@@ -1,7 +1,10 @@
 """Package of methods for merging marathon running data from different
-marathons (time, place).  There are two main methods, combine all dataframes
-with new features added, and using Matching Estimators to sample datasets and
-combine.
+marathons (time, place).
+
+Two main methods:
+1. combine all dataframes and calculate new features
+2. Use Matching Estimators to sample similar individuals across datasets and
+   merge.
 """
 
 import pandas as pd
@@ -428,14 +431,14 @@ weather_df = pd.read_csv(folder+weather_file)
 SAVE_FILENAME = 'boston_combined.csv'
 
 if __name__ == '__main__':
-    marathon_files = ['boston2015_clean.csv', 'boston2014_clean.csv',
-                      'boston2013_clean.csv', 'boston2012_clean.csv',
-                      'boston2011_clean.csv', 'boston2010_clean.csv',
-                      'boston2009_clean.csv', 'boston2008_clean.csv',
-                      'boston2007_clean.csv', 'boston2006_clean.csv',
-                      'boston2005_clean.csv', 'boston2004_clean.csv',
-                      'boston2003_clean.csv', 'boston2002_clean.csv',
-                      'boston2001_clean.csv']
+    marathon_files = ['boston2016_clean.csv', 'boston2015_clean.csv',
+                      'boston2014_clean.csv', 'boston2013_clean.csv',
+                      'boston2012_clean.csv', 'boston2011_clean.csv',
+                      'boston2010_clean.csv', 'boston2009_clean.csv',
+                      'boston2008_clean.csv', 'boston2007_clean.csv',
+                      'boston2006_clean.csv', 'boston2005_clean.csv',
+                      'boston2004_clean.csv', 'boston2003_clean.csv',
+                      'boston2002_clean.csv', 'boston2001_clean.csv']
     output_df = combine_marathon_data(marathon_files)
     # Final processing
     output_df = create_misc_home(output_df)
