@@ -11,6 +11,7 @@ import lxml.html
 from lxml.cssselect import CSSSelector
 import pandas as pd
 from time import sleep
+from sys import stdout
 
 
 def get_hour(hour_text):
@@ -118,12 +119,10 @@ def fetch_weather_page(location, month, day, year):
             success = True
         except ConnectionError:
             success = False
-            print 'x',
             sleep(5)
         if count > 3:
             print 'Exceeded 3 attempts'
             return None
-    print '.',
     return response
 
 
@@ -146,17 +145,26 @@ def fetch_by_csv(filename):
         marathon,year,date,city,...
     '''
     INTERVAL = 1
+    ERROR_URL = 'https://www.wunderground.com/history/index.html?error='
 
     query_df = pd.read_csv(filename)
     weather_df = pd.DataFrame()
     headers = None
+    n = len(query_df)
     # iterate through the rows of the query file
     for ix, query_row in query_df.iterrows():
+        print '\r{0:.0f}%'.format(ix*100. / n),
+        print query_row['date'],
+        print query_row['marathon'][0:8],
+        stdout.flush()
         start_hour = query_row['starthour']
         end_hour = query_row['endhour']
         month, day, year = map(int, query_row['date'].split('/'))
         for cityname in [query_row['startcity'], query_row['endcity']]:
             response = fetch_weather_page(cityname, month, day, year)
+            if response.url[0:54] == ERROR_URL:
+                print 'error:',response.url.split('?')[1].split('&')[0]
+                break
             if headers is None:
                 headers = ['marathon', 'year', 'date', 'city']
                 headers.extend(extract_header(response))
