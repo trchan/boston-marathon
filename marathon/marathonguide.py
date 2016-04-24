@@ -12,7 +12,7 @@ Sample Use
 find_all_midds(2016, 'data/')
     - Generates a '2016midd_list.csv' file that contains all MIDD numbers found
     on marathonguide.com's list of 2016 Marathons.
-    - Generates a '2016_weather.csv' file that contains a list of marathon dates, cities, and times.  This is for use by the wunderground scraper to lookup weather conditions for each marathon.
+    - Generates a '2016_weather_dates.csv' file that contains a list of marathon dates, cities, and times.  This is for use by the wunderground scraper to lookup weather conditions for each marathon.
 
 scrape_marathons('data/', '2016midd_list.csv')
     - Scrapes runner data from each marathon contained in 2016_middlist.csv.
@@ -302,7 +302,7 @@ def find_all_midds(searchyear, csv_folder):
     To generate a list of all the marathons/MIDDs for 2015:
     > marathonguide.find_all_midds(2015)
     """
-    weather_filename = csv_folder+str(searchyear)+'marathon_weather.csv'
+    weather_filename = csv_folder+str(searchyear)+'marathon_dates.csv'
     midd_filename = csv_folder+str(searchyear)+'midd_list.csv'
 
     url = 'http://www.marathonguide.com/results/browse.cfm?Year=' + \
