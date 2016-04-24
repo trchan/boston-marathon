@@ -1,14 +1,20 @@
 """Package of methods for merging marathon running data from different
-marathons (time, place).
+marathons (time, place), and add in new features.
 
-Two main methods:
-1. combine all dataframes and calculate new features
-2. Use Matching Estimators to sample similar individuals across datasets and
-   merge.
+Three main methods:
+1. combine_marathons()
+        - combine all dataframes and calculate new features
+2. combine_marathons(sample=True)
+        - Use Matching Estimators to sample similar individuals across datasets
+        and merge.  Adds in new features.
+3. collect_runners()
+        - Use one dataset to provide a list of runners, build a dataset of
+        those runner's previous race results.
 """
 
 import pandas as pd
 import numpy as np
+from sys import stdout
 
 
 def count_estimators(df):
@@ -128,7 +134,7 @@ def get_wind_vector(windspeeds, winddirections):
     north_winds = []
     windspeeds = get_weather_array(windspeeds, 'mph')
     for speed, direction in zip(windspeeds, winddirections):
-        if compass[direction] != None:
+        if compass[direction] is not None:
             east_winds.append(np.sin(compass[direction]*np.pi) * speed)
             north_winds.append(np.cos(compass[direction]*np.pi) * speed)
         else:
@@ -179,7 +185,7 @@ def fetch_weather_features(marathon_name, year):
     n = len(subset_df)
     # No weather data found
     if n == 0:
-        return 0, 0, 0, 0, False, 0
+        return 0, 0, 0, 0, 0, False, 0
     avgtemp = np.mean(get_weather_array(subset_df['Temp.'], 'F'))
     avghumid = np.mean(get_weather_array(subset_df['Humidity'], '%'))
     avgwind = get_avg_windspeed(subset_df['Wind Speed'])
@@ -295,7 +301,6 @@ def fill_in_missing_splits(df):
         return runner[last_known_split] + pace * time_to_interpolate
 
     # Create new columns of boolean indicating missed splits
-    # df = df.append(pd.DataFrame(columns=missed_splits_cols))
     for newcol in missed_splits_cols:
         df[newcol] = False
     # Iterate through runners
@@ -320,11 +325,13 @@ def fill_in_missing_splits(df):
     return df
 
 
-def add_features(df):
-    """Add features to existing dataframe
+def add_features(df, splits=True):
+    """Add features to existing dataframe.
 
     Parameters
     df : DataFrame
+    splits : boolean
+        Whether to fill in empty split times (computationally intensive)
 
     Returns
     augmented_df : Data Frame
@@ -341,11 +348,47 @@ def add_features(df):
     augmented_df['home'] = [state if country == 'USA' else country for
                             country, state in df[['country', 'state']].values]
     # Manipulate running data
-    augmented_df = fill_in_missing_splits(augmented_df)
+    if splits:
+        augmented_df = fill_in_missing_splits(augmented_df)
 
     # Add weather columns
     marathon_name = augmented_df['marathon'].iloc[0]
     year = augmented_df['year'].iloc[0]
+    avgtemp, avghumid, avgwind, avgwindE, avgwindN, isgusty, rainhours \
+        = fetch_weather_features(marathon_name, year)
+    augmented_df['avgtemp'] = avgtemp
+    augmented_df['avghumid'] = avghumid
+    augmented_df['avgwind'] = avgwind
+    augmented_df['avgwindE'] = avgwindE
+    augmented_df['avgwindN'] = avgwindN
+    augmented_df['isgusty'] = isgusty
+    augmented_df['rainhours'] = rainhours
+    return augmented_df
+
+
+def add_features_for_priors(df):
+    """Add features to existing "prior" dataframe.  This is the dataframe that collect_runners() builds.
+
+    Parameters
+    df : DataFrame
+
+    Returns
+    augmented_df : Data Frame
+    """
+    # Features to include from each marathon
+    augmented_df = df[['marathon', 'year', 'bib', 'name', 'firstname',
+                       'lastname', 'age', 'gender', 'city', 'state',
+                       'country', 'citizenship', 'offltime',
+                       'prior_marathon', 'prior_year', 'prior_time']].copy()
+    # Add runner categories
+    augmented_df['elite'] = df['bib'] <= 100
+    augmented_df['qualifier'] = df['bib'] < \
+        find_nonqualifier_start(augmented_df)
+    augmented_df['home'] = [state if country == 'USA' else country for
+                            country, state in df[['country', 'state']].values]
+    # Add weather columns
+    marathon_name = df['prior_marathon'].iloc[0]
+    year = augmented_df['prior_year'].iloc[0]
     avgtemp, avghumid, avgwind, avgwindE, avgwindN, isgusty, rainhours \
         = fetch_weather_features(marathon_name, year)
     augmented_df['avgtemp'] = avgtemp
@@ -375,6 +418,122 @@ def sample_estimator(df, gender, age):
     return sample_df
 
 
+def year_of_birth(runner):
+    """Returns an estimate for the birth year of a runner.
+    Parameters
+    ----------
+    runner : DataFrame
+
+    Output
+    ------
+    birth_year : int
+        estimated year of birth
+    """
+    birth_year = runner['year'] - runner['age']
+    return birth_year
+
+
+def runner_tiebreaker_(runner, df):
+    '''Determines which record in df is the best match for a given runner.
+    - middle initial
+    - city
+    - state
+    - country
+    - exact birth year
+    - exact name match
+
+    Parameters
+    ----------
+    runner : pd.Series
+        Runner to match
+    df : pd.DataFrame
+        Runners to consider
+
+    Returns
+    -------
+    best_match : pd.Series
+    '''
+    score = dict()
+    runner_yob = year_of_birth(runner)
+    for ix, runner2 in df.iterrows():
+        score[ix] = 0
+        if runner['state'] == runner2['state']:
+            score[ix] += 2
+        if runner['country'] == runner2['country']:
+            score[ix] += 2
+        if runner['city'] == runner2['city']:
+            score[ix] += 2
+        if runner['name'] == runner2['name']:
+            score[ix] += 1
+        # score for first initial
+
+        def get_initial(name):
+            '''Returns the middle initial of a name.  Format of name is
+            expected to be 'Lastname, Firstname Patty'
+            >>> get_initial('Lastname, Firstname Patty')
+            'P'
+            '''
+            return name.split(' ')[-1][0]
+
+        if get_initial(runner['name']) == get_initial(runner2['name']):
+            score[ix] += 3
+        if runner_yob == year_of_birth(runner2):
+            score[ix] += 1
+    best_match_ix = max(score, key=score.get)
+    return df.loc[best_match_ix]
+
+
+def find_same_runner(runner, df, lastnames):
+    '''Searches df for runner.
+    Criteria:
+        - first name must match
+        - last name must match
+        - Gender must match
+        - Birthyear must be +/- 1 year
+        - Tiebreaker, see runner_tiebreaker_()
+
+    Parameters
+    ----------
+    runner : pandas.core.series.Series
+        One running record.
+        Must have ['lastname', 'firstname', 'gender', 'age']
+    df : pandas DataFrame
+        Dataframe to find matching runner record
+
+    Returns
+    -------
+    found_runner : pandas.core.series.Series
+        Matching row from df
+    '''
+    # Iteratively match categories, for algorithmic speed
+    if runner['lastname'] in lastnames:
+        match = (df['lastname'] == runner['lastname'])
+        match_df = df.loc[match]
+        if len(match_df) > 0:
+            # Check that firstname matches
+            match = match_df['firstname'] == runner['firstname']
+            match_df = match_df.loc[match]
+            if len(match_df) > 0:
+                # Check that gender matches
+                match = match_df['gender'] == runner['gender']
+                match_df = match_df.loc[match]
+                if len(match_df) > 0:
+                    # Check that birthyear matches
+                    runner_yob = year_of_birth(runner)
+                    match = abs(year_of_birth(match_df) - runner_yob) <= 1
+                    match_df = match_df.loc[match]
+                    if len(match_df) == 1:
+                        return match_df.iloc[0]
+                    elif len(match_df) > 1:
+                        # Tiebreaker
+                        # print len(match_df), 'matches for:', runner['name'],\
+                        # runner['city']
+                        match_df = runner_tiebreaker_(runner, match_df)
+                        # print match_df['name'], match_df['city']
+                        return match_df
+    return pd.Series()
+
+
 def sample_all(df):
     """Fetches the correct number of matching estimators from DataFrame
 
@@ -394,11 +553,11 @@ def sample_all(df):
     return sample_df
 
 
-def combine_marathon_data(filelist, sample=False):
+def combine_marathons(filelist, sample=False):
     output_df = pd.DataFrame()
     for filename in marathon_files:
-        print 'Importing', folder+filename
-        df = pd.read_csv(folder+filename)
+        print 'Importing', FOLDER+filename
+        df = pd.read_csv(FOLDER+filename)
         if sample:
             sample_df = sample_all(df)
             output_df = output_df.append(add_features(sample_df))
@@ -407,7 +566,58 @@ def combine_marathon_data(filelist, sample=False):
     return output_df
 
 
+def collect_runners(runners_file, marathon_files):
+    '''retrieves runners from runners_file, and collects/extracts their running
+    histories.
+
+    Parameters
+    ----------
+    runners_file : string
+        filename containing a list of runners and their bio
+    marathon_files : list of string
+        set of marathon files to extract running records from
+
+    Returns
+    -------
+    output_df : Pandas DataFrame
+    '''
+    # List of columns to keep from runners_file
+    current_features = ['marathon', 'year', 'bib', 'name', 'firstname',
+                        'lastname', 'age', 'gender', 'city', 'state',
+                        'country', 'citizenship', 'offltime']
+    # List of columns to grab from runner's history, for each race
+    prior_features = ['marathon', 'year', 'offltime']
+    # New name of columns from runner's history
+    prior_feature_names = ['prior_marathon', 'prior_year', 'prior_time']
+
+    output_df = pd.DataFrame()
+    runners_df = pd.read_csv(FOLDER+runners_file)
+    num_runners = len(runners_df)
+    for filename in marathon_files:
+        print 'Extracting runners from:', FOLDER+filename
+        df = pd.read_csv(FOLDER+filename)
+        lastnames = set(df['lastname'])
+        extracted_runners = []
+        for ix, runner in runners_df.iterrows():
+            print '\r{0:.0f}%'.format(ix*100. / num_runners),
+            stdout.flush()
+            prior = find_same_runner(runner, df, lastnames)
+            if len(prior) > 0:
+                prior = prior[prior_features]
+                prior.index = prior_feature_names
+                extracted_runners.append(runner.append(prior))
+        extracted_df = pd.concat(extracted_runners, axis=1).T
+        print extracted_df.shape
+        extracted_df = add_features_for_priors(extracted_df)
+        output_df = output_df.append(extracted_df)
+    return output_df
+
+
 def create_misc_home(df):
+    '''Cleans up the 'home' category column by reducing the number of
+    categorical values.  All categories <0.1% of all records are merged as
+    'MISC'
+    '''
     print "Binning home category as 'MISC' if size <0.1% of all records"
     n = len(df)
     count_df = df['home'].value_counts()
@@ -425,24 +635,26 @@ GENDERS = (True, False)
 AGES = range(AGE_MIN, AGE_MAX+1, 1)
 SAMPLE_SIZE = 50
 
-folder = 'data/'
+FOLDER = 'data/'
 weather_file = 'marathon_weather.csv'
-weather_df = pd.read_csv(folder+weather_file)
-SAVE_FILENAME = 'boston_combined.csv'
+weather_df = pd.read_csv(FOLDER+weather_file)
+SAVE_FILENAME = 'boston2016_priors.csv'
 
 if __name__ == '__main__':
-    marathon_files = ['boston2016_clean.csv', 'boston2015_clean.csv',
-                      'boston2014_clean.csv', 'boston2013_clean.csv',
-                      'boston2012_clean.csv', 'boston2011_clean.csv',
-                      'boston2010_clean.csv', 'boston2009_clean.csv',
-                      'boston2008_clean.csv', 'boston2007_clean.csv',
-                      'boston2006_clean.csv', 'boston2005_clean.csv',
-                      'boston2004_clean.csv', 'boston2003_clean.csv',
-                      'boston2002_clean.csv', 'boston2001_clean.csv']
-    output_df = combine_marathon_data(marathon_files)
+    marathon_files = ['boston2015_clean.csv']
+    # marathon_files = ['boston2015_clean.csv',
+    #                   'boston2014_clean.csv', 'boston2013_clean.csv',
+    #                   'boston2012_clean.csv', 'boston2011_clean.csv',
+    #                   'boston2010_clean.csv', 'boston2009_clean.csv',
+    #                   'boston2008_clean.csv', 'boston2007_clean.csv',
+    #                   'boston2006_clean.csv', 'boston2005_clean.csv',
+    #                   'boston2004_clean.csv', 'boston2003_clean.csv',
+    #                   'boston2002_clean.csv', 'boston2001_clean.csv']
+    # output_df = combine_marathons(marathon_files)
+    output_df = collect_runners('boston2016_clean.csv', marathon_files)
     # Final processing
     output_df = create_misc_home(output_df)
-    save_file = folder+SAVE_FILENAME
+    save_file = FOLDER+SAVE_FILENAME
     print 'Saving', save_file
     output_df.to_csv(save_file, index=False)
     print len(output_df), 'records saved'

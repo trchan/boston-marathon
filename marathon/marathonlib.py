@@ -78,8 +78,8 @@ def find_missing_records(df):
 
 def plot_runners_by_gender(df):
     num_bins = df['age'].max() - df['age'].min()
-    df[df['gender'] == True]['age'].hist(bins=num_bins, color='b', alpha=0.5)
-    df[df['gender'] == False]['age'].hist(bins=num_bins, color='r', alpha=0.5)
+    df[df['gender']]['age'].hist(bins=num_bins, color='b', alpha=0.5)
+    df[~df['gender']]['age'].hist(bins=num_bins, color='r', alpha=0.5)
     plt.legend(['men', 'women'])
     plt.xlabel('Age')
     plt.ylabel('Number of Runners')
@@ -125,45 +125,6 @@ def clean_name(name):
     if len(names) > 2:
         print '{0:30} --> {1}, {2}'.format(name, firstname, lastname)
     return firstname, lastname
-
-
-def year_of_birth(runner):
-    """Returns an estimate for the birth year of a runner.
-    Parameters
-    ----------
-    runner : DataFrame
-
-    Output
-    ------
-    birth_year : int
-        estimated year of birth
-    """
-    pass
-
-
-def is_same_runner(runner1, runner2):
-    '''
-    Compares two runner profiles and determines whether they are the same
-    runner.
-    INPUT:
-        runner1,
-        runner2 : DataFrame row
-    OUTPUT:
-        boolean
-
-    Criteria:
-        - gender must be identical
-        - first initial must be identical
-        - last name must match first 3 letters
-    '''
-    if runner1['gender'] != runner2['gender']:
-        return False
-    print type(runner1['firstname'])
-#    if runner1['firstname'].ix[0][0] != runner2['firstname'].ix[0][0]
-#        return False
-#    if runner1['lastname'][0:3] != runner2['lastname'][0:3]
-#        return False
-    return True
 
 
 if __name__ == "__main__":
