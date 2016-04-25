@@ -38,8 +38,8 @@
 # | overall_rank  | integer  |
 # | gender_rank   | integer  |
 # | division_rank | integer  |
-# | other1        | string   | Field for future assignment
-# | other2        | string   | Field for future assignment
+# | minage        | string   | minimum age (from runner category)
+# | maxage        | string   | maximum age (from runner category)
 # | other3        | string   | Field for future assignment
 # | other4        | string   | Field for future assignment
 #
@@ -185,7 +185,7 @@ def clean_bos2010(raw_df, marathon_id, year):
                      u'time15k', u'time20k', u'timehalf', u'time25k',
                      u'time30k', u'time35k', u'time40k', u'pace',
                      u'projtime', u'offltime', u'nettime', u'overall_rank',
-                     u'gender_rank', u'division_rank', u'other1', u'other2',
+                     u'gender_rank', u'division_rank', u'minage', u'maxage',
                      u'other3', u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
     clean_df['bib'] = map(clean_bib, raw_df['bib'])
@@ -226,8 +226,8 @@ def clean_bos2010(raw_df, marathon_id, year):
     clean_df['overall_rank'] = raw_df['overall']
     clean_df['gender_rank'] = raw_df['genderrank']
     clean_df['division_rank'] = raw_df['division']
-    clean_df['other1'] = blank_str
-    clean_df['other2'] = blank_str
+    clean_df['minage'] = blank_str
+    clean_df['maxage'] = blank_str
     clean_df['other3'] = blank_str
     clean_df['other4'] = blank_str
     return clean_df
@@ -257,7 +257,7 @@ def clean_bos2001(raw_df, marathon_id, year):
                      u'time15k', u'time20k', u'timehalf', u'time25k',
                      u'time30k', u'time35k', u'time40k', u'pace', u'projtime',
                      u'offltime', u'nettime', u'overall_rank', u'gender_rank',
-                     u'division_rank', u'other1', u'other2', u'other3',
+                     u'division_rank', u'minage', u'maxage', u'other3',
                      u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
     clean_df['bib'] = map(clean_bib, raw_df['bib'])
@@ -300,8 +300,8 @@ def clean_bos2001(raw_df, marathon_id, year):
                                   raw_df['genderrank'])
     clean_df['division_rank'] = map(lambda s: int(s.split('/')[0]),
                                     raw_df['divisionrank'])
-    clean_df['other1'] = blank_str
-    clean_df['other2'] = blank_str
+    clean_df['minage'] = blank_str
+    clean_df['maxage'] = blank_str
     clean_df['other3'] = blank_str
     clean_df['other4'] = blank_str
     return clean_df

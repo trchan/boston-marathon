@@ -15,6 +15,7 @@ Three main methods:
 import pandas as pd
 import numpy as np
 from sys import stdout
+import os
 
 
 def count_estimators(df):
@@ -381,9 +382,8 @@ def add_features_for_priors(df):
                        'country', 'citizenship', 'offltime',
                        'prior_marathon', 'prior_year', 'prior_time']].copy()
     # Add runner categories
-    augmented_df['elite'] = df['bib'] <= 100
-    augmented_df['qualifier'] = df['bib'] < \
-        find_nonqualifier_start(augmented_df)
+    augmented_df['elite'] = False
+    augmented_df['qualifier'] = False
     augmented_df['home'] = [state if country == 'USA' else country for
                             country, state in df[['country', 'state']].values]
     # Add weather columns
@@ -483,6 +483,23 @@ def runner_tiebreaker_(runner, df):
     return df.loc[best_match_ix]
 
 
+def do_ages_match(runner_yob, df):
+    '''Checks whether runner matches age
+    Parameters
+    ----------
+    runner_yob: integer
+        runner's year of birth (eg. 1969)
+    df: DataFrame
+        Contains list of runners that may match runner yob
+    '''
+    if (df['age'] >= 0).all():
+        return abs(year_of_birth(df) - runner_yob) <= 1
+    else:
+        # use age range, since age is not provided
+        return (runner_yob <= df['year'] - df['minage']) & \
+            (runner_yob >= df['year'] - df['maxage'])
+
+
 def find_same_runner(runner, df, lastnames):
     '''Searches df for runner.
     Criteria:
@@ -520,7 +537,7 @@ def find_same_runner(runner, df, lastnames):
                 if len(match_df) > 0:
                     # Check that birthyear matches
                     runner_yob = year_of_birth(runner)
-                    match = abs(year_of_birth(match_df) - runner_yob) <= 1
+                    match = do_ages_match(runner_yob, match_df)
                     match_df = match_df.loc[match]
                     if len(match_df) == 1:
                         return match_df.iloc[0]
@@ -606,9 +623,12 @@ def collect_runners(runners_file, marathon_files):
                 prior = prior[prior_features]
                 prior.index = prior_feature_names
                 extracted_runners.append(runner.append(prior))
-        extracted_df = pd.concat(extracted_runners, axis=1).T
+        if len(extracted_runners) == 0:
+            extracted_df = pd.DataFrame(columns=current_features + prior_feature_names + ['elite', 'qualifier', 'home', 'avgtemp', 'avghumid', 'avgwind', 'avgwindE', 'avgwindN', 'isgusty', 'rainhours'])
+        else:
+            extracted_df = pd.concat(extracted_runners, axis=1).T
+            extracted_df = add_features_for_priors(extracted_df)
         print extracted_df.shape
-        extracted_df = add_features_for_priors(extracted_df)
         output_df = output_df.append(extracted_df)
     return output_df
 
@@ -628,6 +648,17 @@ def create_misc_home(df):
     return df
 
 
+def getmarathonguide(folder):
+    '''Searches folder for '*_clean.csv', and returns list of files.
+    '''
+    output = []
+    file_list = os.listdir(FOLDER+folder)
+    for file in file_list:
+        if file.find('_clean.csv') > 0:
+            output.append(folder+file)
+    return output
+
+
 # Estimator Definition, results in 40 x 2 estimators
 AGE_MIN = 21
 AGE_MAX = 60
@@ -638,18 +669,14 @@ SAMPLE_SIZE = 50
 FOLDER = 'data/'
 weather_file = 'marathon_weather.csv'
 weather_df = pd.read_csv(FOLDER+weather_file)
-SAVE_FILENAME = 'boston2016_priors.csv'
+SAVE_FILENAME = 'boston2016_priors+.csv'
 
 if __name__ == '__main__':
-    marathon_files = ['boston2015_clean.csv']
-    # marathon_files = ['boston2015_clean.csv',
-    #                   'boston2014_clean.csv', 'boston2013_clean.csv',
-    #                   'boston2012_clean.csv', 'boston2011_clean.csv',
-    #                   'boston2010_clean.csv', 'boston2009_clean.csv',
-    #                   'boston2008_clean.csv', 'boston2007_clean.csv',
-    #                   'boston2006_clean.csv', 'boston2005_clean.csv',
-    #                   'boston2004_clean.csv', 'boston2003_clean.csv',
-    #                   'boston2002_clean.csv', 'boston2001_clean.csv']
+    marathon_files = ['boston2015_clean.csv',
+                      'boston2014_clean.csv', 'boston2013_clean.csv',
+                      'boston2012_clean.csv', 'boston2011_clean.csv',
+                      'boston2010_clean.csv', 'boston2009_clean.csv']
+    marathon_files = getmarathonguide('marathonguide/') + marathon_files
     # output_df = combine_marathons(marathon_files)
     output_df = collect_runners('boston2016_clean.csv', marathon_files)
     # Final processing

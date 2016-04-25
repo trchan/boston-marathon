@@ -137,7 +137,8 @@ def get_age_range(div):
 
 
 def getcity_state_country(series):
-    '''Takes a list of 'City State Country' in text form and returns a list of states and a list of countries.
+    '''Takes a list of 'City State Country' in text form and returns a list of
+    states and a list of countries.
 
     Example
     -------
@@ -221,9 +222,11 @@ def clean_raw_marathon(raw_df, marathon_id, year):
 
     RAW CSV HEADER - can vary
     Sample 1:
-    "Last Name, First Name(Sex/Age)",Time,OverAllPlace,Sex Place/Div Place,DIV,Net Time,"City, State, Country",AG Time*,BQ*,midd
+    "Last Name, First Name(Sex/Age)",Time,OverAllPlace,Sex Place/Div
+    Place,DIV,Net Time,"City, State, Country",AG Time*,BQ*,midd
     Sample 2:
-    "Last Name, First Name(Sex/Age)",Time,OverAllPlace,Sex Place/Div Place,DIV,Net Time,"State, Country",AG Time*,BQ*,midd
+    "Last Name, First Name(Sex/Age)",Time,OverAllPlace,Sex Place/Div
+    Place,DIV,Net Time,"State, Country",AG Time*,BQ*,midd
     '''
     blank_str = '-'
     blank_val = 0
@@ -237,34 +240,41 @@ def clean_raw_marathon(raw_df, marathon_id, year):
                      u'division_rank', u'minage', u'maxage', u'other3',
                      u'other4']
     clean_df = pd.DataFrame(columns=clean_columns)
+    clean_df['name'] = get_fullname(raw_df['Last Name, First Name(Sex/Age)'])
     clean_df['bib'] = blank_val
     clean_df['marathon'] = marathon_id
     clean_df['year'] = year
     clean_df['url'] = blank_str
-    clean_df['name'] = get_fullname(raw_df['Last Name, First Name(Sex/Age)'])
     firstnames, lastnames, genders, ages = [], [], [], []
-    minages, maxages = [], []
-    raw_df.loc[raw_df['DIV'].isnull(), 'DIV'] = ''
-    for name, div in zip(raw_df['Last Name, First Name(Sex/Age)'], raw_df['DIV']):
+    # Extract 'Last Name, Firstname(Sex/Age)' field
+    for name in raw_df['Last Name, First Name(Sex/Age)']:
         firstname, lastname, gender, age = clean_name(name)
         firstnames.append(firstname)
         lastnames.append(lastname)
         genders.append(gender)
         ages.append(age)
-        min_age, max_age = get_age_range(div)
-        minages.append(min_age)
-        maxages.append(max_age)
     clean_df['firstname'] = firstnames
     clean_df['lastname'] = lastnames
     clean_df['gender'] = genders
     clean_df['age'] = ages
+    # Find age category
+    if 'DIV' in raw_df.columns:
+        raw_df.loc[raw_df['DIV'].isnull(), 'DIV'] = ''
+        minages, maxages = [], []
+        for div in raw_df['DIV']:
+            min_age, max_age = get_age_range(div)
+            minages.append(min_age)
+            maxages.append(max_age)
+        clean_df['minage'] = minages
+        clean_df['maxage'] = maxages
     if 'State, Country' in raw_df.columns:
         raw_df[raw_df['State, Country'].isnull()] = ''
         state, country = getstate_country(raw_df['State, Country'])
         city = blank_str
     elif 'City, State, Country' in raw_df.columns:
         raw_df[raw_df['City, State, Country'].isnull()] = ''
-        city, state, country = getcity_state_country(raw_df['City, State, Country'])
+        city, state, country = getcity_state_country(
+                raw_df['City, State, Country'])
     else:
         city = blank_str
         state = blank_str
@@ -299,8 +309,6 @@ def clean_raw_marathon(raw_df, marathon_id, year):
     clean_df['overall_rank'] = blank_val
     clean_df['gender_rank'] = blank_val
     clean_df['division_rank'] = blank_val
-    clean_df['minage'] = minages
-    clean_df['maxage'] = maxages
     clean_df['other3'] = blank_str
     clean_df['other4'] = blank_str
     return clean_df
@@ -329,8 +337,8 @@ def batch_clean_files(file_list, folder, midd_file):
         print 'Importing', file
         raw_df = pd.read_csv(folder+file)
         midd = raw_df.iloc[0]['midd']
-        name = midd_df[midd_df['midd'] == midd]['marathon'].values[0]
-        year = midd_df[midd_df['midd'] == midd]['year'].values[0]
+        name = midd_df.loc[midd_df['midd'] == midd]['marathon'].values[0]
+        year = midd_df.loc[midd_df['midd'] == midd]['year'].values[0]
         # Converts raw data into "Standardized" Clean DataFrame
         clean_df = clean_raw_marathon(raw_df, name, year)
         # Filter out records
@@ -352,6 +360,9 @@ if __name__ == '__main__':
                  'disney_world2016raw.csv', 'marine_corps2014raw.csv',
                  'city_of_los_angeles2014raw.csv', 'disney_world2014raw.csv',
                  'honolulu2014raw.csv', 'honolulu2015raw.csv',
-                 'philadelphia2014raw.csv', 'philadelphia2015raw.csv']
+                 'philadelphia2014raw.csv', 'philadelphia2015raw.csv',
+                 'houston2014raw.csv', 'houston2015raw.csv',
+                 'houston2016raw.csv', 'st_george2014raw.csv',
+                 'st_george2015raw.csv']
 
     batch_clean_files(file_list, FOLDER, MIDD_FILE)
