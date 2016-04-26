@@ -341,7 +341,7 @@ def find_all_midds(searchyear, csv_folder):
     s.close()
     print 'Saving', len(midd_df), 'records.'
     midd_df.columns = ['marathon', 'year', 'midd']
-    midd_df.to_csv(midd_filename, index=False)
+    midd_df.to_csv(midd_filename, index=False, encoding='utf-8')
     weather_df.columns = ['marathon', 'year', 'date', 'startcity', 'endcity',
                           'starthour', 'endhour']
     weather_df.to_csv(weather_filename, index=False)
