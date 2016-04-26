@@ -327,7 +327,8 @@ def find_all_midds(searchyear, csv_folder):
             sleep(1)
             response = s.get(home_url, params=home_parameters)
             visited.add(midd)
-            if response.title != 'Website Maintenance':
+            soup = BeautifulSoup(response.text, 'lxml')
+            if soup.title != 'Website Maintenance':
                 marathon_name, city, date = get_marathon_info(response.text)
                 marathon_name = clean_marathon_name(marathon_name)
                 city = clean_marathon_city(city)
