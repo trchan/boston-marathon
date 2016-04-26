@@ -50,6 +50,7 @@
 import pandas as pd
 from string import punctuation, digits
 from marathonlib import time_to_minutes
+import os
 
 
 def get_fullname(names):
@@ -64,7 +65,10 @@ def get_fullname(names):
     for name in names:
         fullname = name.split(' ')
         n = len(fullname)
-        fullname = fullname[-2] + ', ' + " ".join(fullname[0:-2])
+        try:
+            fullname = fullname[-2] + ', ' + " ".join(fullname[0:-2])
+        except IndexError:
+            fullname = ""
         fullnames.append(fullname)
     return fullnames
 
@@ -93,12 +97,16 @@ def clean_name(name):
     ('KARINA', 'BARRIOS', False, 28)
     '''
     names = name.split(' ')
-    lastname = names[-2]
-    lastname = [c.upper() for c in lastname if c not in punctuation+' ']
-    lastname = "".join(lastname)
-    firstname = names[0]
-    firstname = [c.upper() for c in firstname if c not in punctuation+' ']
-    firstname = "".join(firstname)
+    if len(names) > 2:
+        lastname = names[-2]
+        lastname = [c.upper() for c in lastname if c not in punctuation+' ']
+        lastname = "".join(lastname)
+        firstname = names[0]
+        firstname = [c.upper() for c in firstname if c not in punctuation+' ']
+        firstname = "".join(firstname)
+    else:
+        firstname = ""
+        lastname = names[0]
     genderage = names[-1]
     if genderage[1] == 'M':
         gender = True
@@ -121,7 +129,9 @@ def get_age_range(div):
     (18, 99)
     '''
     if div.find('-') > 0:
-        min_age, max_age = div.split('-')
+        ages = div.split('-')
+        min_age = ages[0]
+        max_age = ages[1]
         try:
             min_age = int(min_age[-2:])
         except ValueError:
@@ -129,7 +139,7 @@ def get_age_range(div):
         try:
             max_age = int(max_age[0:2])
         except ValueError:
-            max_age = int(max_age[1:])
+            max_age = 99
     else:
         min_age = 18
         max_age = 99
@@ -349,20 +359,19 @@ def batch_clean_files(file_list, folder, midd_file):
         clean_df.to_csv(filename, index=False)
 
 
+def getallfiles():
+    '''Searches folder for '*raw.csv', and returns list of files.
+    '''
+    output = []
+    file_list = os.listdir(FOLDER)
+    for file in file_list:
+        if file.find('raw.csv') > 0:
+            output.append(file)
+    return output
+
+
 if __name__ == '__main__':
     FOLDER = 'data/marathonguide/scrape/'
     MIDD_FILE = '../midd_list.csv'
-    file_list = ['new_york_city2014raw.csv', 'new_york_city2015raw.csv',
-                 'chicago2014raw.csv', 'chicago2015raw.csv',
-                 'london2015raw.csv', 'london2014raw.csv',
-                 'marine_corps2015raw.csv', 'city_of_los_angeles2015raw.csv',
-                 'city_of_los_angeles2016raw.csv', 'disney_world2015raw.csv',
-                 'disney_world2016raw.csv', 'marine_corps2014raw.csv',
-                 'city_of_los_angeles2014raw.csv', 'disney_world2014raw.csv',
-                 'honolulu2014raw.csv', 'honolulu2015raw.csv',
-                 'philadelphia2014raw.csv', 'philadelphia2015raw.csv',
-                 'houston2014raw.csv', 'houston2015raw.csv',
-                 'houston2016raw.csv', 'st_george2014raw.csv',
-                 'st_george2015raw.csv']
-
+    file_list = getallfiles()
     batch_clean_files(file_list, FOLDER, MIDD_FILE)
