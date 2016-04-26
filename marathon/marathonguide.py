@@ -236,6 +236,7 @@ def fetch_marathon_runners(midd):
 def clean_marathon_name(name):
     in_bracket = False
     clean_name = ''
+    name = name.encode('ascii', 'replace')
     for c in name:
         if c == '(':
             in_bracket = True
@@ -243,15 +244,14 @@ def clean_marathon_name(name):
             clean_name += c
         if c == ')':
             in_bracket = False
-    name = clean_name
-    name = name.lower()
-    name = name.replace('marathon', '')
-    name = name.replace('series', '')
-    name = name.strip()
-    name = name.replace('   ', ' ')
-    name = name.replace('  ', ' ')
-    name = name.replace(' ', '_')
-    return name
+    clean_name = clean_name.lower()
+    clean_name = clean_name.replace('marathon', '')
+    clean_name = clean_name.replace('series', '')
+    clean_name = clean_name.strip()
+    clean_name = clean_name.replace('   ', ' ')
+    clean_name = clean_name.replace('  ', ' ')
+    clean_name = clean_name.replace(' ', '_')
+    return clean_name
 
 
 def clean_marathon_city(name):
@@ -262,6 +262,7 @@ def clean_marathon_city(name):
     >>> clean_marathon_city('Dublin, Ireland')
     'Dublin, Ireland'
     """
+    name = name.encode('ascii', 'replace')
     name = name.strip()
     return name
 
@@ -341,7 +342,7 @@ def find_all_midds(searchyear, csv_folder):
     s.close()
     print 'Saving', len(midd_df), 'records.'
     midd_df.columns = ['marathon', 'year', 'midd']
-    midd_df.to_csv(midd_filename, index=False, encoding='utf-8')
+    midd_df.to_csv(midd_filename, index=False, encoding='ascii')
     weather_df.columns = ['marathon', 'year', 'date', 'startcity', 'endcity',
                           'starthour', 'endhour']
     weather_df.to_csv(weather_filename, index=False)
