@@ -12,7 +12,9 @@ Sample Use
 find_all_midds(2016, 'data/')
     - Generates a '2016midd_list.csv' file that contains all MIDD numbers found
     on marathonguide.com's list of 2016 Marathons.
-    - Generates a '2016_weather_dates.csv' file that contains a list of marathon dates, cities, and times.  This is for use by the wunderground scraper to lookup weather conditions for each marathon.
+    - Generates a '2016_weather_dates.csv' file that contains a list of
+    marathon dates, cities, and times.  This is for use by the wunderground
+    scraper to lookup weather conditions for each marathon.
 
 scrape_marathons('data/', '2016midd_list.csv')
     - Scrapes runner data from each marathon contained in 2016_middlist.csv.
@@ -300,7 +302,7 @@ def find_all_midds(searchyear, csv_folder):
     provide a list of marathons/weather to scrape.
 
     To generate a list of all the marathons/MIDDs for 2015:
-    > marathonguide.find_all_midds(2015)
+    > marathonguide.find_all_midds(2015, '2015/')
     """
     weather_filename = csv_folder+str(searchyear)+'marathon_dates.csv'
     midd_filename = csv_folder+str(searchyear)+'midd_list.csv'
@@ -315,7 +317,9 @@ def find_all_midds(searchyear, csv_folder):
     midd_df = pd.DataFrame()
     # Go to search page for each MIDD and find other MIDDs
     home_url = 'http://www.marathonguide.com/results/browse.cfm'
-    visited = set([5987150912])
+    # Keep track of midd pages visited.  This is seeded with values that are
+    # known to be bad links.
+    visited = set([5987150912, 5146130224])
     while len(midds) > 0:
         midd = midds.popleft()
         if midd not in visited:
@@ -323,15 +327,16 @@ def find_all_midds(searchyear, csv_folder):
             sleep(1)
             response = s.get(home_url, params=home_parameters)
             visited.add(midd)
-            marathon_name, city, date = get_marathon_info(response.text)
-            marathon_name = clean_marathon_name(marathon_name)
-            city = clean_marathon_city(city)
-            year = get_year(date)
-            date = clean_date(date)
-            midd_df = midd_df.append([[marathon_name, year, midd]])
-            weather_df = weather_df.append([[marathon_name, year, date, city,
-                                            city, 10, 16]])
-            print marathon_name, year, midd, date, city
+            if response.title != 'Website Maintenance':
+                marathon_name, city, date = get_marathon_info(response.text)
+                marathon_name = clean_marathon_name(marathon_name)
+                city = clean_marathon_city(city)
+                year = get_year(date)
+                date = clean_date(date)
+                midd_df = midd_df.append([[marathon_name, year, midd]])
+                weather_df = weather_df.append([[marathon_name, year, date,
+                                                 city, city, 10, 16]])
+                print marathon_name, year, midd, date, city
     s.close()
     print 'Saving', len(midd_df), 'records.'
     midd_df.columns = ['marathon', 'year', 'midd']
