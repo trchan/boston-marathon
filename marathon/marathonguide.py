@@ -116,7 +116,7 @@ def get_searchpage_runners(s, midd, params):
         cells = row.find_all('td')
         row_data = [cell.text.encode('ascii', 'replace').
                     replace('?', '').strip() for cell in cells]
-        if len(row_data) >= 5:
+        if len(row_data) >= 4:
             runners.append(row_data)
     return runners
 
