@@ -307,9 +307,12 @@ def clean_raw_marathon(raw_df, marathon_id, year):
     clean_df['time40k'] = blank_val
     clean_df['pace'] = blank_val
     clean_df['projtime'] = blank_val
-
     if 'Time' in raw_df.columns:
         clean_df['offltime'] = map(time_to_minutes, raw_df['Time'])
+        null_times = clean_df['offltime'].isnull()
+        if sum(null_times) > 0:
+            clean_df.loc[null_times, 'offltime'] = map(time_to_minutes, \
+                    raw_df.loc[null_times, 'Net Time'])
     else:
         clean_df['offltime'] = map(time_to_minutes, raw_df['Net Time'])
     if 'Net Time' in raw_df.columns:
