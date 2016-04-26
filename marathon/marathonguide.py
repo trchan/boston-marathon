@@ -258,11 +258,12 @@ def clean_marathon_city(name):
     """Doesn't do much.  It used to, but I don't want to remove it.
 
     >>> clean_marathon_city('Las Cruces, NM USA')
-    'Las Cruces, NM USA'
+    'Las Cruces NM USA'
     >>> clean_marathon_city('Dublin, Ireland')
-    'Dublin, Ireland'
+    'Dublin Ireland'
     """
     name = name.encode('ascii', 'replace')
+    name = "".join([c for c in name if c not in punctuation])
     name = name.strip()
     return name
 
