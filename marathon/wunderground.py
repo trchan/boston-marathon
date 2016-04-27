@@ -61,7 +61,9 @@ def find_closest_time(time_list, target_hour):
 
 
 def extract_header(response):
-    # Get Header from response object
+    '''Get Header from response object
+    DEPRECATED
+    '''
     tree = lxml.html.fromstring(response.text)
     sel = CSSSelector('#obsTable th')
     header = [item.text_content().strip() for item in sel(tree)]
@@ -87,6 +89,7 @@ def extract_weather_for_time(response, target_time):
     # Identify checking Dew Point column for a Humidity value (% instead of F)
     if row_data[3][-1] == '%':
         row_data = row_data[0:2] + ['-'] + row_data[2:]
+    row_data = row_data[0:13]   # Trim, for error control
     return row_data
 
 
@@ -144,12 +147,16 @@ def fetch_by_csv(filename):
         Starts with the following header:
         marathon,year,date,city,...
     '''
-    INTERVAL = 1
+    INTERVAL = 1    # sampling interval in hours
     ERROR_URL = 'https://www.wunderground.com/history/index.html?error='
 
     query_df = pd.read_csv(filename)
     weather_df = pd.DataFrame()
-    headers = None
+    # headers = None
+    headers = ['marathon', 'year', 'date', 'city', 'Time', 'Temp.',
+               'Windchill', 'Dew Point', 'Humidity', 'Pressure', 'Visibility',
+               'Wind Dir', 'Wind Speed', 'Gust Speed', 'Precip', 'Events',
+               'Conditions']
     n = len(query_df)
     # iterate through the rows of the query file
     for ix, query_row in query_df.iterrows():
@@ -168,14 +175,15 @@ def fetch_by_csv(filename):
             if response.text.find('No daily or hourly history data') > 0:
                 print 'error: no hourly data available'
                 break
-            if headers is None:
-                headers = ['marathon', 'year', 'date', 'city']
-                headers.extend(extract_header(response))
+            # if headers is None:
+                # headers = ['marathon', 'year', 'date', 'city']
+                # headers.extend(extract_header(response))
             for t in range(start_hour, end_hour+1, INTERVAL):
                 data_row = [query_row['marathon'], query_row['year'],
                             query_row['date'], cityname]
                 data_row.extend(extract_weather_for_time(response, t))
                 weather_df = weather_df.append([data_row])
+        print weather_df.shape
     weather_df.columns = headers
     return weather_df
 
@@ -199,7 +207,10 @@ def query_by_csv_to_csv(inputfile, outputfile):
 
 def test_fetch_weather():
     response = fetch_weather_page('Boston MA', 04, 20, 2015)
-    header = extract_header(response)
+    header = ['marathon', 'year', 'date', 'city', 'Time', 'Temp.',
+              'Windchill', 'Dew Point', 'Humidity', 'Pressure', 'Visibility',
+              'Wind Dir', 'Wind Speed', 'Gust Speed', 'Precip', 'Events',
+              'Conditions']
     data = []
     data.append(extract_weather_for_time(response, 10))
     data.append(extract_weather_for_time(response, 16))
