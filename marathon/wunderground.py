@@ -170,10 +170,10 @@ def fetch_by_csv(filename):
         for cityname in [query_row['startcity'], query_row['endcity']]:
             response = fetch_weather_page(cityname, month, day, year)
             if response.url[0:54] == ERROR_URL:
-                print 'error:',response.url.split('?')[1].split('&')[0]
+                print 'error:',response.url.split('?')[1].split('&')[0],
                 break
             if response.text.find('No daily or hourly history data') > 0:
-                print 'error: no hourly data available'
+                print 'error: no hourly data available',
                 break
             # if headers is None:
                 # headers = ['marathon', 'year', 'date', 'city']
