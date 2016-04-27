@@ -1,6 +1,6 @@
 # Boston Marathon - Winners and Cheaters
 
-#### Timothy Chan
+#### Timothy Chan, PhD MBA
 #### Created April 10th, 2016
 #### Updated April 26th, 2016
 
@@ -21,3 +21,12 @@ A secondary model was built to flag outlier runners as possible cheaters.  A run
 - cleanmarathonguide.py - For cleaning raw marathon data from marathonguide.com.
 - wunderground.py - For scraping weather data from weatherunderground.com.
 - combineboston.py - Takes clean.csv marathon data files (Boston Marathon, weatherunderground, and Marathonguide) and merges them together with extra features.
+
+## Acknowledgements
+
+I reached out to several individuals who graciously offered me advice and information regarding the workings of the Boston Marathon and marathon running in general.
+
+- **Derek Murphy**, (marathoninvestigations.com) graciously provided his hand-curated set of cheaters from the 2015 Boston Marathon.  Data Science is often filled with regret.  "If only we had this data".  Thanks to Derek Murphy, I had access to the critical data set that completes this project.  It was crucial to score my outlier classification model, and reject the multiple failed models that preceded it.  Derek also shared his expertise regarding how he spots cheaters.
+- **Joslynn Lee**, Runner and Data Science Educator at Cold Spring Harbor Laboratory.
+
+I would also like to thank the Galvanize Inc. instructors, Benjamin Skrainka, Ming Huang, and Brian Mann for sharing their advice and wisdom during the Data Science Intensive program.
