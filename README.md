@@ -10,8 +10,9 @@ This repo contains an analysis of the Boston Marathon running data.  A dataset c
 
 A secondary model was built to flag outlier runners as possible cheaters.  A runner's deviation from their predicted time was found to be a good classifier when compared against a labelled data set provided by Derek Murphy (marathoninvestigations.com).  This classifier had good recall and earned an AUC of 0.944.
 
-## Methodology
+## Files Listings
 
+marathon/
 - bosscraper2015.py - for scraping 2010-2016 Boston Marathon data from the Boston Athletics Association.  Data is stored in MongoDB.
 - bosscraper2009.py - for scraping 2001-2009 Boston Marathon data from the Boston Athletics Association.  Data is stored in MongoDB.
 - extractboston.py - For converting scraped Boston Marathon data stored in MongoDB to a raw .csv file.
@@ -21,6 +22,13 @@ A secondary model was built to flag outlier runners as possible cheaters.  A run
 - cleanmarathonguide.py - For cleaning raw marathon data from marathonguide.com.
 - wunderground.py - For scraping weather data from weatherunderground.com.
 - combineboston.py - Takes clean.csv marathon data files (Boston Marathon, weatherunderground, and Marathonguide) and merges them together with extra features.
+
+scripts/
+- EDA2015Marathon.ipynb - EDA on 2015 Boston Marathon dataset
+- Features 2015Marathon.ipynb
+- Matching Estimators1.ipynb
+- scrapingengine2001-2009.ipynb - BAA Scraper for 2001-2009
+- scrapingengine2010-2016.ipynb - BAA Scraper for 2010-2016
 
 ## Acknowledgements
 
