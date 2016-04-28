@@ -1,0 +1,227 @@
+marathon,year,date,city,Time,Temp.,Windchill,Dew Point,Humidity,Pressure,Visibility,Wind Dir,Wind Speed,Gust Speed,Precip,Events,Conditions
+boston,2016,04/18/2016,Worcester MA,9:54 AM,66.0F,-,25.0F,21%,30.23in,10.0mi,ENE,8.1mph,-,N/A,,Clear
+boston,2016,04/18/2016,Worcester MA,10:54 AM,66.9F,-,27.0F,22%,30.23in,10.0mi,ENE,5.8mph,-,N/A,,Clear
+boston,2016,04/18/2016,Worcester MA,11:54 AM,70.0F,-,28.0F,21%,30.21in,10.0mi,North,9.2mph,-,N/A,,Clear
+boston,2016,04/18/2016,Worcester MA,12:54 PM,70.0F,-,30.0F,23%,30.19in,10.0mi,ENE,8.1mph,-,N/A,,Clear
+boston,2016,04/18/2016,Worcester MA,1:54 PM,70.0F,-,30.0F,23%,30.17in,10.0mi,SSW,4.6mph,-,N/A,,Clear
+boston,2016,04/18/2016,Worcester MA,2:54 PM,70.0F,-,32.0F,25%,30.14in,10.0mi,ESE,11.5mph,-,N/A,,Scattered Clouds
+boston,2016,04/18/2016,Worcester MA,3:54 PM,66.9F,-,32.0F,27%,30.13in,10.0mi,East,10.4mph,20.7mph,N/A,,Mostly Cloudy
+boston,2016,04/18/2016,Boston MA,9:54 AM,66.0F,-,30.9F,27%,30.22in,10.0mi,NNE,8.1mph,-,N/A,,Scattered Clouds
+boston,2016,04/18/2016,Boston MA,10:54 AM,62.1F,-,36.0F,38%,30.23in,10.0mi,ENE,13.8mph,-,N/A,,Scattered Clouds
+boston,2016,04/18/2016,Boston MA,11:54 AM,59.0F,-,35.1F,41%,30.23in,10.0mi,ENE,19.6mph,-,N/A,,Mostly Cloudy
+boston,2016,04/18/2016,Boston MA,12:54 PM,57.0F,-,34.0F,42%,30.22in,10.0mi,ENE,17.3mph,-,N/A,,Scattered Clouds
+boston,2016,04/18/2016,Boston MA,1:54 PM,53.1F,-,37.0F,55%,30.23in,10.0mi,East,13.8mph,-,N/A,,Mostly Cloudy
+boston,2016,04/18/2016,Boston MA,2:54 PM,52.0F,-,37.0F,57%,30.21in,10.0mi,East,10.4mph,-,N/A,,Mostly Cloudy
+boston,2016,04/18/2016,Boston MA,3:54 PM,52.0F,-,37.0F,57%,30.19in,10.0mi,ENE,11.5mph,-,N/A,,Scattered Clouds
+boston,2015,04/20/2015,Worcester MA,9:54 AM,41.0F,34.3F,39.0F,93%,30.10in,10.0mi,East,11.5mph,20.7mph,N/A,,Overcast
+boston,2015,04/20/2015,Worcester MA,10:54 AM,42.1F,35.7F,39.0F,89%,30.07in,8.0mi,East,11.5mph,-,0.00in,Rain,Light Rain
+boston,2015,04/20/2015,Worcester MA,11:54 AM,41.0F,33.9F,39.0F,93%,30.05in,4.0mi,ENE,12.7mph,20.7mph,0.07in,Rain,Rain
+boston,2015,04/20/2015,Worcester MA,1:02 PM,41.0F,34.3F,39.0F,93%,29.98in,3.0mi,ENE,11.5mph,-,0.01in,Rain,Light Rain
+boston,2015,04/20/2015,Worcester MA,1:54 PM,42.1F,35.7F,39.9F,92%,29.96in,0.8mi,ENE,11.5mph,21.9mph,0.04in,Rain,Light Rain
+boston,2015,04/20/2015,Worcester MA,2:54 PM,43.0F,38.8F,42.1F,97%,29.95in,0.5mi,ENE,6.9mph,-,0.05in,Rain,Rain
+boston,2015,04/20/2015,Worcester MA,3:54 PM,44.1F,37.7F,42.1F,93%,29.90in,0.2mi,ENE,12.7mph,-,0.08in,"Fog
+	,
+Rain",Rain
+boston,2015,04/20/2015,Boston MA,9:54 AM,42.1F,33.9F,39.9F,92%,30.17in,10.0mi,East,17.3mph,-,0.00in,,Overcast
+boston,2015,04/20/2015,Boston MA,10:54 AM,44.1F,36.5F,39.0F,82%,30.14in,10.0mi,East,17.3mph,-,N/A,,Overcast
+boston,2015,04/20/2015,Boston MA,11:54 AM,44.1F,35.4F,39.0F,82%,30.11in,10.0mi,East,21.9mph,28.8mph,N/A,,Overcast
+boston,2015,04/20/2015,Boston MA,12:54 PM,43.0F,34.8F,39.9F,89%,30.08in,3.0mi,ESE,18.4mph,-,0.00in,Rain,Light Rain
+boston,2015,04/20/2015,Boston MA,1:54 PM,44.1F,36.8F,41.0F,89%,30.04in,3.0mi,East,16.1mph,-,0.04in,,Overcast
+boston,2015,04/20/2015,Boston MA,2:54 PM,44.1F,35.9F,41.0F,89%,29.99in,10.0mi,East,19.6mph,-,0.00in,,Overcast
+boston,2015,04/20/2015,Boston MA,3:54 PM,45.0F,37.6F,42.1F,90%,29.95in,2.0mi,East,17.3mph,-,0.00in,Rain,Light Rain
+boston,2014,04/21/2014,Worcester MA,9:54 AM,50.0F,-,14.0F,24%,30.18in,10.0mi,WSW,10.4mph,-,N/A,,Clear
+boston,2014,04/21/2014,Worcester MA,10:54 AM,54.0F,-,15.1F,22%,30.16in,10.0mi,SSW,8.1mph,-,N/A,,Clear
+boston,2014,04/21/2014,Worcester MA,11:54 AM,57.9F,-,14.0F,18%,30.12in,10.0mi,Variable,5.8mph,-,N/A,,Clear
+boston,2014,04/21/2014,Worcester MA,12:54 PM,62.1F,-,12.9F,15%,30.07in,10.0mi,SSW,11.5mph,-,N/A,,Clear
+boston,2014,04/21/2014,Worcester MA,1:54 PM,64.0F,-,10.9F,13%,30.04in,10.0mi,WSW,9.2mph,18.4mph,N/A,,Clear
+boston,2014,04/21/2014,Worcester MA,2:54 PM,66.9F,-,10.9F,11%,30.00in,10.0mi,SW,11.5mph,17.3mph,N/A,,Clear
+boston,2014,04/21/2014,Worcester MA,3:54 PM,68.0F,-,10.9F,11%,29.96in,10.0mi,SW,13.8mph,-,N/A,,Clear
+boston,2014,04/21/2014,Boston MA,9:54 AM,52.0F,-,27.0F,38%,30.18in,10.0mi,SSW,6.9mph,-,N/A,,Scattered Clouds
+boston,2014,04/21/2014,Boston MA,10:54 AM,55.0F,-,23.0F,29%,30.15in,10.0mi,SSW,8.1mph,-,N/A,,Mostly Cloudy
+boston,2014,04/21/2014,Boston MA,11:54 AM,59.0F,-,23.0F,25%,30.12in,10.0mi,South,8.1mph,-,N/A,,Mostly Cloudy
+boston,2014,04/21/2014,Boston MA,12:54 PM,55.0F,-,35.1F,47%,30.06in,10.0mi,ESE,10.4mph,-,N/A,,Mostly Cloudy
+boston,2014,04/21/2014,Boston MA,1:54 PM,57.9F,-,36.0F,44%,30.03in,10.0mi,ESE,9.2mph,-,N/A,,Mostly Cloudy
+boston,2014,04/21/2014,Boston MA,2:54 PM,63.0F,-,34.0F,34%,29.99in,10.0mi,SE,8.1mph,-,N/A,,Mostly Cloudy
+boston,2014,04/21/2014,Boston MA,3:54 PM,66.9F,-,28.0F,23%,29.95in,10.0mi,South,13.8mph,-,N/A,,Mostly Cloudy
+boston,2013,04/15/2013,Worcester MA,9:54 AM,43.0F,-,27.0F,53%,30.39in,10.0mi,North,-,-,N/A,,Overcast
+boston,2013,04/15/2013,Worcester MA,10:54 AM,45.0F,43.5F,28.0F,52%,30.39in,10.0mi,Variable,3.5mph,-,N/A,,Overcast
+boston,2013,04/15/2013,Worcester MA,11:54 AM,48.9F,-,27.0F,43%,30.38in,10.0mi,Variable,3.5mph,-,N/A,,Clear
+boston,2013,04/15/2013,Worcester MA,12:54 PM,50.0F,-,27.0F,41%,30.36in,10.0mi,Variable,3.5mph,-,N/A,,Clear
+boston,2013,04/15/2013,Worcester MA,1:54 PM,50.0F,-,28.0F,43%,30.35in,10.0mi,Variable,4.6mph,-,N/A,,Clear
+boston,2013,04/15/2013,Worcester MA,2:54 PM,52.0F,-,28.0F,40%,30.34in,10.0mi,South,5.8mph,-,N/A,,Clear
+boston,2013,04/15/2013,Worcester MA,3:54 PM,53.1F,-,28.9F,40%,30.32in,10.0mi,South,4.6mph,-,N/A,,Clear
+boston,2013,04/15/2013,Boston MA,9:54 AM,48.0F,-,30.0F,50%,30.39in,10.0mi,East,6.9mph,-,N/A,,Mostly Cloudy
+boston,2013,04/15/2013,Boston MA,10:54 AM,48.0F,-,32.0F,54%,30.40in,10.0mi,Variable,6.9mph,-,N/A,,Mostly Cloudy
+boston,2013,04/15/2013,Boston MA,11:54 AM,48.0F,-,32.0F,54%,30.39in,10.0mi,East,10.4mph,-,N/A,,Mostly Cloudy
+boston,2013,04/15/2013,Boston MA,12:54 PM,48.0F,-,34.0F,58%,30.38in,10.0mi,East,11.5mph,-,N/A,,Overcast
+boston,2013,04/15/2013,Boston MA,1:54 PM,48.9F,-,35.1F,59%,30.38in,10.0mi,East,15.0mph,-,N/A,,Overcast
+boston,2013,04/15/2013,Boston MA,2:54 PM,46.9F,-,35.1F,63%,30.37in,10.0mi,ESE,18.4mph,-,N/A,,Overcast
+boston,2013,04/15/2013,Boston MA,3:54 PM,46.9F,-,37.0F,68%,30.36in,10.0mi,ESE,18.4mph,-,N/A,,Overcast
+boston,2012,04/16/2012,Worcester MA,9:54 AM,75.0F,-,54.0F,48%,30.01in,10.0mi,SW,9.2mph,-,N/A,,Clear
+boston,2012,04/16/2012,Worcester MA,10:54 AM,79.0F,-,52.0F,39%,30.02in,10.0mi,West,8.1mph,-,N/A,,Clear
+boston,2012,04/16/2012,Worcester MA,11:54 AM,82.0F,-,48.9F,31%,30.00in,10.0mi,West,10.4mph,-,N/A,,Clear
+boston,2012,04/16/2012,Worcester MA,12:54 PM,84.9F,-,46.9F,27%,29.99in,10.0mi,SW,13.8mph,25.3mph,N/A,,Clear
+boston,2012,04/16/2012,Worcester MA,1:54 PM,84.9F,-,45.0F,25%,29.97in,10.0mi,WSW,9.2mph,-,N/A,,Clear
+boston,2012,04/16/2012,Worcester MA,2:54 PM,86.0F,-,44.1F,23%,29.95in,10.0mi,SW,13.8mph,23.0mph,N/A,,Clear
+boston,2012,04/16/2012,Worcester MA,3:54 PM,87.1F,-,44.1F,22%,29.91in,10.0mi,SW,16.1mph,21.9mph,N/A,,Clear
+boston,2012,04/16/2012,Boston MA,9:54 AM,73.9F,-,57.9F,57%,29.99in,10.0mi,South,5.8mph,-,N/A,,Scattered Clouds
+boston,2012,04/16/2012,Boston MA,10:54 AM,69.1F,-,55.9F,63%,30.00in,10.0mi,East,8.1mph,-,N/A,,Scattered Clouds
+boston,2012,04/16/2012,Boston MA,11:54 AM,73.9F,-,57.9F,57%,29.98in,10.0mi,East,6.9mph,-,N/A,,Partly Cloudy
+boston,2012,04/16/2012,Boston MA,12:54 PM,77.0F,-,57.0F,50%,29.96in,10.0mi,ESE,10.4mph,-,N/A,,Partly Cloudy
+boston,2012,04/16/2012,Boston MA,1:54 PM,79.0F,-,57.0F,47%,29.94in,10.0mi,ENE,6.9mph,-,N/A,,Scattered Clouds
+boston,2012,04/16/2012,Boston MA,2:54 PM,84.0F,82.5F,53.1F,34%,29.91in,10.0mi,South,15.0mph,-,N/A,,Scattered Clouds
+boston,2012,04/16/2012,Boston MA,3:54 PM,84.0F,82.5F,53.1F,34%,29.89in,10.0mi,South,13.8mph,-,N/A,,Scattered Clouds
+boston,2011,04/18/2011,Worcester MA,9:54 AM,43.0F,34.5F,23.0F,45%,29.94in,10.0mi,West,19.6mph,27.6mph,N/A,,Partly Cloudy
+boston,2011,04/18/2011,Worcester MA,10:54 AM,45.0F,38.2F,21.9F,40%,29.95in,10.0mi,West,15.0mph,26.5mph,N/A,,Clear
+boston,2011,04/18/2011,Worcester MA,11:54 AM,48.0F,-,21.9F,36%,29.94in,10.0mi,West,15.0mph,29.9mph,N/A,,Clear
+boston,2011,04/18/2011,Worcester MA,12:54 PM,51.1F,-,21.9F,32%,29.95in,10.0mi,WSW,16.1mph,31.1mph,N/A,,Clear
+boston,2011,04/18/2011,Worcester MA,1:54 PM,54.0F,-,24.1F,31%,29.93in,10.0mi,WSW,15.0mph,20.7mph,N/A,,Clear
+boston,2011,04/18/2011,Worcester MA,2:54 PM,55.9F,-,26.1F,32%,29.94in,10.0mi,SW,17.3mph,24.2mph,N/A,,Clear
+boston,2011,04/18/2011,Worcester MA,3:54 PM,55.9F,-,27.0F,33%,29.94in,10.0mi,WSW,11.5mph,-,N/A,,Clear
+boston,2011,04/18/2011,Boston MA,9:54 AM,48.9F,-,25.0F,39%,29.94in,10.0mi,WSW,19.6mph,26.5mph,N/A,,Scattered Clouds
+boston,2011,04/18/2011,Boston MA,10:54 AM,50.0F,-,24.1F,36%,29.95in,10.0mi,West,19.6mph,31.1mph,N/A,,Scattered Clouds
+boston,2011,04/18/2011,Boston MA,11:54 AM,53.1F,-,25.0F,34%,29.94in,10.0mi,WSW,16.1mph,-,N/A,,Scattered Clouds
+boston,2011,04/18/2011,Boston MA,12:54 PM,57.0F,-,25.0F,29%,29.94in,10.0mi,West,19.6mph,26.5mph,N/A,,Scattered Clouds
+boston,2011,04/18/2011,Boston MA,1:54 PM,57.9F,-,24.1F,27%,29.93in,10.0mi,WSW,15.0mph,27.6mph,N/A,,Scattered Clouds
+boston,2011,04/18/2011,Boston MA,2:54 PM,60.1F,-,24.1F,25%,29.93in,10.0mi,WSW,18.4mph,24.2mph,N/A,,Mostly Cloudy
+boston,2011,04/18/2011,Boston MA,3:54 PM,60.1F,-,25.0F,26%,29.93in,10.0mi,WSW,16.1mph,26.5mph,N/A,,Overcast
+boston,2010,04/19/2010,Worcester MA,9:54 AM,46.9F,-,28.9F,50%,29.88in,10.0mi,NNW,11.5mph,24.2mph,N/A,,Partly Cloudy
+boston,2010,04/19/2010,Worcester MA,10:54 AM,48.0F,-,27.0F,44%,29.88in,10.0mi,NNW,20.7mph,28.8mph,N/A,,Partly Cloudy
+boston,2010,04/19/2010,Worcester MA,11:54 AM,48.9F,-,30.0F,48%,29.88in,10.0mi,NW,17.3mph,25.3mph,N/A,,Mostly Cloudy
+boston,2010,04/19/2010,Worcester MA,12:54 PM,51.1F,-,30.0F,44%,29.87in,10.0mi,NNW,12.7mph,19.6mph,N/A,,Overcast
+boston,2010,04/19/2010,Worcester MA,1:54 PM,52.0F,-,30.9F,45%,29.89in,10.0mi,NNW,13.8mph,18.4mph,N/A,,Overcast
+boston,2010,04/19/2010,Worcester MA,2:54 PM,53.1F,-,32.0F,45%,29.89in,10.0mi,NNW,12.7mph,-,N/A,,Scattered Clouds
+boston,2010,04/19/2010,Worcester MA,3:54 PM,55.0F,-,33.1F,43%,29.90in,10.0mi,NE,11.5mph,18.4mph,N/A,,Mostly Cloudy
+boston,2010,04/19/2010,Boston MA,9:54 AM,50.0F,-,32.0F,50%,29.86in,10.0mi,NW,12.7mph,-,N/A,,Scattered Clouds
+boston,2010,04/19/2010,Boston MA,10:54 AM,52.0F,-,30.9F,45%,29.86in,10.0mi,NNW,17.3mph,-,N/A,,Scattered Clouds
+boston,2010,04/19/2010,Boston MA,11:54 AM,54.0F,-,32.0F,43%,29.85in,10.0mi,NNW,15.0mph,20.7mph,N/A,,Overcast
+boston,2010,04/19/2010,Boston MA,12:54 PM,53.1F,-,33.1F,47%,29.85in,10.0mi,WNW,15.0mph,-,N/A,,Mostly Cloudy
+boston,2010,04/19/2010,Boston MA,1:54 PM,55.0F,-,33.1F,43%,29.86in,10.0mi,NW,11.5mph,19.6mph,N/A,,Mostly Cloudy
+boston,2010,04/19/2010,Boston MA,2:54 PM,55.9F,-,35.1F,45%,29.86in,10.0mi,NW,8.1mph,17.3mph,N/A,,Mostly Cloudy
+boston,2010,04/19/2010,Boston MA,3:54 PM,59.0F,-,36.0F,42%,29.86in,10.0mi,NNW,13.8mph,17.3mph,N/A,,Mostly Cloudy
+boston,2009,04/20/2009,Worcester MA,9:54 AM,41.0F,35.2F,32.0F,70%,30.28in,10.0mi,ESE,9.2mph,-,N/A,,Clear
+boston,2009,04/20/2009,Worcester MA,10:54 AM,45.0F,39.3F,30.0F,56%,30.26in,10.0mi,East,11.5mph,18.4mph,N/A,,Clear
+boston,2009,04/20/2009,Worcester MA,11:54 AM,48.0F,-,26.1F,42%,30.25in,10.0mi,East,12.7mph,23.0mph,N/A,,Clear
+boston,2009,04/20/2009,Worcester MA,12:54 PM,48.9F,-,23.0F,36%,30.23in,10.0mi,ESE,15.0mph,28.8mph,N/A,,Clear
+boston,2009,04/20/2009,Worcester MA,1:54 PM,48.9F,-,21.0F,33%,30.22in,10.0mi,East,16.1mph,26.5mph,N/A,,Clear
+boston,2009,04/20/2009,Worcester MA,2:54 PM,48.0F,-,19.9F,33%,30.22in,10.0mi,East,10.4mph,24.2mph,N/A,,Clear
+boston,2009,04/20/2009,Worcester MA,3:54 PM,46.9F,-,19.0F,33%,30.20in,10.0mi,ESE,13.8mph,23.0mph,N/A,,Partly Cloudy
+boston,2009,04/20/2009,Boston MA,9:54 AM,46.0F,40.6F,36.0F,68%,30.31in,10.0mi,East,11.5mph,-,N/A,,Overcast
+boston,2009,04/20/2009,Boston MA,10:54 AM,46.9F,-,35.1F,63%,30.32in,10.0mi,ESE,15.0mph,-,N/A,,Overcast
+boston,2009,04/20/2009,Boston MA,11:54 AM,48.0F,-,36.0F,63%,30.30in,10.0mi,ESE,17.3mph,-,N/A,,Overcast
+boston,2009,04/20/2009,Boston MA,12:54 PM,46.9F,-,36.0F,66%,30.29in,10.0mi,ESE,16.1mph,-,N/A,,Overcast
+boston,2009,04/20/2009,Boston MA,1:54 PM,46.9F,-,36.0F,66%,30.28in,9.0mi,ESE,16.1mph,-,N/A,,Overcast
+boston,2009,04/20/2009,Boston MA,2:54 PM,46.9F,-,36.0F,66%,30.28in,10.0mi,East,13.8mph,-,N/A,,Overcast
+boston,2009,04/20/2009,Boston MA,3:54 PM,46.0F,39.0F,36.0F,68%,30.25in,10.0mi,East,17.3mph,-,N/A,,Overcast
+boston,2008,04/21/2008,Worcester MA,9:54 AM,46.9F,-,42.1F,83%,30.39in,9.0mi,Variable,3.5mph,-,N/A,,Overcast
+boston,2008,04/21/2008,Worcester MA,10:54 AM,52.0F,-,39.9F,63%,30.38in,10.0mi,NE,5.8mph,-,N/A,,Clear
+boston,2008,04/21/2008,Worcester MA,11:54 AM,57.0F,-,34.0F,42%,30.37in,10.0mi,Variable,4.6mph,-,N/A,,Clear
+boston,2008,04/21/2008,Worcester MA,12:54 PM,59.0F,-,33.1F,38%,30.35in,10.0mi,SE,4.6mph,-,N/A,,Clear
+boston,2008,04/21/2008,Worcester MA,1:54 PM,64.0F,-,36.0F,35%,30.35in,10.0mi,SE,5.8mph,-,N/A,,Clear
+boston,2008,04/21/2008,Worcester MA,2:54 PM,66.0F,-,36.0F,33%,30.33in,10.0mi,SE,9.2mph,-,N/A,,Clear
+boston,2008,04/21/2008,Worcester MA,3:54 PM,68.0F,-,35.1F,30%,30.31in,10.0mi,SE,4.6mph,-,N/A,,Partly Cloudy
+boston,2008,04/21/2008,Boston MA,9:54 AM,48.0F,-,43.0F,83%,30.40in,10.0mi,East,4.6mph,-,N/A,,Overcast
+boston,2008,04/21/2008,Boston MA,10:54 AM,48.9F,-,43.0F,80%,30.40in,10.0mi,East,6.9mph,-,N/A,,Mostly Cloudy
+boston,2008,04/21/2008,Boston MA,11:54 AM,50.0F,-,43.0F,77%,30.40in,10.0mi,East,9.2mph,-,N/A,,Mostly Cloudy
+boston,2008,04/21/2008,Boston MA,12:54 PM,51.1F,-,44.1F,77%,30.39in,10.0mi,East,9.2mph,-,N/A,,Mostly Cloudy
+boston,2008,04/21/2008,Boston MA,1:54 PM,51.1F,-,44.1F,77%,30.38in,10.0mi,East,9.2mph,-,N/A,,Scattered Clouds
+boston,2008,04/21/2008,Boston MA,2:54 PM,52.0F,-,44.1F,74%,30.36in,10.0mi,East,9.2mph,-,N/A,,Scattered Clouds
+boston,2008,04/21/2008,Boston MA,3:54 PM,51.1F,-,44.1F,77%,30.35in,10.0mi,East,10.4mph,-,N/A,,Mostly Cloudy
+boston,2007,04/16/2007,Worcester MA,10:01 AM,46.4F,40.4F,42.8F,87%,28.87in,10.0mi,ESE,13.8mph,20.7mph,0.00in,Rain,Light Rain
+boston,2007,04/16/2007,Worcester MA,11:01 AM,44.6F,38.4F,39.2F,81%,28.88in,10.0mi,ESE,12.7mph,24.2mph,N/A,,Overcast
+boston,2007,04/16/2007,Worcester MA,11:54 AM,43.0F,35.7F,37.9F,82%,28.91in,8.0mi,ESE,15.0mph,26.5mph,0.00in,Rain,Light Rain
+boston,2007,04/16/2007,Worcester MA,1:03 PM,39.2F,30.5F,35.6F,87%,28.92in,6.0mi,ESE,16.1mph,27.6mph,0.01in,Rain,Light Rain
+boston,2007,04/16/2007,Worcester MA,1:54 PM,39.9F,31.4F,37.0F,89%,28.96in,5.0mi,ESE,16.1mph,24.2mph,0.03in,Rain,Light Rain
+boston,2007,04/16/2007,Worcester MA,2:54 PM,39.0F,32.3F,35.1F,86%,28.99in,9.0mi,ESE,10.4mph,20.7mph,0.01in,Rain,Light Rain
+boston,2007,04/16/2007,Worcester MA,3:54 PM,39.0F,31.8F,33.1F,79%,29.03in,10.0mi,ESE,11.5mph,20.7mph,0.00in,,Overcast
+boston,2007,04/16/2007,Boston MA,9:54 AM,46.9F,-,46.0F,97%,28.95in,2.0mi,ESE,27.6mph,35.7mph,0.03in,Rain,Light Rain
+boston,2007,04/16/2007,Boston MA,10:54 AM,48.0F,-,46.9F,96%,28.97in,2.5mi,ESE,17.3mph,-,0.03in,Rain,Light Rain
+boston,2007,04/16/2007,Boston MA,11:54 AM,46.4F,37.2F,42.8F,87%,29.00in,5.0mi,SSE,29.9mph,36.8mph,N/A,Rain,Light Rain
+boston,2007,04/16/2007,Boston MA,12:54 PM,48.0F,-,39.0F,71%,29.01in,10.0mi,SSE,24.2mph,34.5mph,0.00in,,Overcast
+boston,2007,04/16/2007,Boston MA,1:54 PM,46.9F,-,37.9F,71%,29.03in,10.0mi,SE,21.9mph,-,N/A,,Overcast
+boston,2007,04/16/2007,Boston MA,2:54 PM,45.0F,37.1F,39.0F,80%,29.07in,9.0mi,ESE,19.6mph,-,N/A,,Overcast
+boston,2007,04/16/2007,Boston MA,3:54 PM,45.0F,37.4F,39.0F,80%,29.10in,8.0mi,ESE,18.4mph,-,N/A,,Overcast
+boston,2006,04/17/2006,Worcester MA,9:54 AM,46.0F,43.1F,32.0F,58%,29.80in,10.0mi,Variable,5.8mph,-,N/A,,Mostly Cloudy
+boston,2006,04/17/2006,Worcester MA,10:54 AM,48.9F,-,32.0F,52%,29.79in,10.0mi,NE,8.1mph,-,N/A,,Clear
+boston,2006,04/17/2006,Worcester MA,12:54 PM,51.1F,-,32.0F,48%,29.76in,10.0mi,North,8.1mph,-,N/A,,Overcast
+boston,2006,04/17/2006,Worcester MA,12:54 PM,51.1F,-,32.0F,48%,29.76in,10.0mi,North,8.1mph,-,N/A,,Overcast
+boston,2006,04/17/2006,Worcester MA,12:54 PM,51.1F,-,32.0F,48%,29.76in,10.0mi,North,8.1mph,-,N/A,,Overcast
+boston,2006,04/17/2006,Worcester MA,3:54 PM,55.0F,-,32.0F,42%,29.74in,10.0mi,North,10.4mph,-,N/A,,Overcast
+boston,2006,04/17/2006,Worcester MA,3:54 PM,55.0F,-,32.0F,42%,29.74in,10.0mi,North,10.4mph,-,N/A,,Overcast
+boston,2006,04/17/2006,Boston MA,9:54 AM,48.0F,-,34.0F,58%,29.79in,10.0mi,NNE,6.9mph,-,N/A,,Partly Cloudy
+boston,2006,04/17/2006,Boston MA,10:54 AM,48.0F,-,35.1F,61%,29.80in,10.0mi,East,11.5mph,-,N/A,,Mostly Cloudy
+boston,2006,04/17/2006,Boston MA,11:54 AM,48.0F,-,35.1F,61%,29.79in,10.0mi,SE,9.2mph,-,N/A,,Overcast
+boston,2006,04/17/2006,Boston MA,12:54 PM,46.9F,-,34.0F,61%,29.78in,10.0mi,SE,8.1mph,-,N/A,,Overcast
+boston,2006,04/17/2006,Boston MA,1:54 PM,48.9F,-,36.0F,61%,29.76in,10.0mi,ESE,10.4mph,-,N/A,,Mostly Cloudy
+boston,2006,04/17/2006,Boston MA,2:54 PM,51.1F,-,36.0F,56%,29.74in,10.0mi,ESE,10.4mph,-,N/A,,Mostly Cloudy
+boston,2006,04/17/2006,Boston MA,3:54 PM,52.0F,-,37.0F,57%,29.73in,10.0mi,East,6.9mph,-,N/A,,Partly Cloudy
+boston,2005,04/18/2005,Worcester MA,9:54 AM,61.0F,-,21.0F,21%,30.11in,10.0mi,NNW,9.2mph,-,N/A,,Clear
+boston,2005,04/18/2005,Worcester MA,10:54 AM,63.0F,-,10.0F,13%,30.12in,10.0mi,NNE,12.7mph,-,N/A,,Clear
+boston,2005,04/18/2005,Worcester MA,11:54 AM,64.0F,-,7.0F,11%,30.11in,10.0mi,Variable,5.8mph,-,N/A,,Partly Cloudy
+boston,2005,04/18/2005,Worcester MA,12:54 PM,64.9F,-,5.0F,9%,30.09in,10.0mi,Variable,5.8mph,-,N/A,,Clear
+boston,2005,04/18/2005,Worcester MA,1:54 PM,66.9F,-,9.0F,10%,30.08in,10.0mi,Calm,Calm,-,N/A,,Clear
+boston,2005,04/18/2005,Worcester MA,2:54 PM,69.1F,-,10.9F,11%,30.05in,10.0mi,North,11.5mph,-,N/A,,Clear
+boston,2005,04/18/2005,Worcester MA,3:54 PM,68.0F,-,7.0F,9%,30.04in,10.0mi,NW,11.5mph,20.7mph,N/A,,Clear
+boston,2005,04/18/2005,Boston MA,9:54 AM,63.0F,-,26.1F,25%,30.10in,10.0mi,North,12.7mph,-,N/A,,Mostly Cloudy
+boston,2005,04/18/2005,Boston MA,10:54 AM,66.0F,-,21.9F,19%,30.10in,10.0mi,North,9.2mph,-,N/A,,Scattered Clouds
+boston,2005,04/18/2005,Boston MA,11:54 AM,63.0F,-,30.0F,29%,30.09in,10.0mi,East,15.0mph,-,N/A,,Partly Cloudy
+boston,2005,04/18/2005,Boston MA,12:54 PM,62.1F,-,28.9F,29%,30.08in,10.0mi,East,15.0mph,-,N/A,,Partly Cloudy
+boston,2005,04/18/2005,Boston MA,1:54 PM,59.0F,-,32.0F,36%,30.08in,10.0mi,SE,10.4mph,-,N/A,,Partly Cloudy
+boston,2005,04/18/2005,Boston MA,2:54 PM,61.0F,-,23.0F,23%,30.06in,10.0mi,SE,12.7mph,-,N/A,,Mostly Cloudy
+boston,2005,04/18/2005,Boston MA,3:54 PM,60.1F,-,26.1F,27%,30.04in,10.0mi,ESE,10.4mph,-,N/A,,Mostly Cloudy
+boston,2004,04/19/2004,Worcester MA,9:54 AM,66.9F,-,48.9F,52%,30.05in,10.0mi,WSW,17.3mph,-,N/A,,Clear
+boston,2004,04/19/2004,Worcester MA,10:54 AM,73.0F,-,46.0F,38%,30.01in,10.0mi,SW,20.7mph,27.6mph,N/A,,Clear
+boston,2004,04/19/2004,Worcester MA,11:54 AM,77.0F,-,45.0F,32%,29.99in,10.0mi,SW,18.4mph,-,N/A,,Clear
+boston,2004,04/19/2004,Worcester MA,12:54 PM,81.0F,-,44.1F,27%,29.94in,10.0mi,SW,24.2mph,31.1mph,N/A,,Clear
+boston,2004,04/19/2004,Worcester MA,1:54 PM,82.0F,-,41.0F,23%,29.90in,10.0mi,SW,21.9mph,31.1mph,N/A,,Clear
+boston,2004,04/19/2004,Worcester MA,2:54 PM,84.9F,-,37.9F,19%,29.86in,10.0mi,SW,25.3mph,40.3mph,N/A,,Clear
+boston,2004,04/19/2004,Worcester MA,3:54 PM,84.9F,-,37.0F,18%,29.81in,10.0mi,SW,23.0mph,38.0mph,N/A,,Clear
+boston,2004,04/19/2004,Boston MA,9:54 AM,63.0F,-,50.0F,63%,30.03in,10.0mi,SW,13.8mph,-,N/A,,Scattered Clouds
+boston,2004,04/19/2004,Boston MA,10:54 AM,70.0F,-,51.1F,51%,29.99in,10.0mi,SSW,12.7mph,-,N/A,,Mostly Cloudy
+boston,2004,04/19/2004,Boston MA,11:54 AM,78.1F,-,50.0F,37%,29.96in,10.0mi,SSW,16.1mph,23.0mph,N/A,,Overcast
+boston,2004,04/19/2004,Boston MA,12:54 PM,78.1F,-,50.0F,37%,29.91in,10.0mi,SSW,17.3mph,-,N/A,,Overcast
+boston,2004,04/19/2004,Boston MA,1:54 PM,82.9F,-,50.0F,32%,29.87in,10.0mi,SSW,17.3mph,-,N/A,,Overcast
+boston,2004,04/19/2004,Boston MA,2:54 PM,86.0F,-,45.0F,24%,29.81in,10.0mi,SW,28.8mph,34.5mph,N/A,,Overcast
+boston,2004,04/19/2004,Boston MA,3:54 PM,84.0F,-,46.9F,27%,29.78in,10.0mi,SW,24.2mph,31.1mph,N/A,,Overcast
+boston,2003,04/21/2003,Worcester MA,9:54 AM,55.0F,-,34.0F,45%,30.06in,10.0mi,South,8.1mph,-,N/A,,Clear
+boston,2003,04/21/2003,Worcester MA,10:54 AM,57.9F,-,34.0F,41%,30.05in,10.0mi,SSE,5.8mph,-,N/A,,Clear
+boston,2003,04/21/2003,Worcester MA,11:54 AM,60.1F,-,32.0F,35%,30.01in,10.0mi,SE,10.4mph,-,N/A,,Clear
+boston,2003,04/21/2003,Worcester MA,12:54 PM,64.0F,-,34.0F,33%,29.99in,10.0mi,SSE,12.7mph,18.4mph,N/A,,Clear
+boston,2003,04/21/2003,Worcester MA,1:54 PM,66.0F,-,36.0F,33%,29.96in,10.0mi,South,13.8mph,-,N/A,,Clear
+boston,2003,04/21/2003,Worcester MA,2:54 PM,66.9F,-,36.0F,32%,29.94in,10.0mi,South,13.8mph,-,N/A,,Clear
+boston,2003,04/21/2003,Worcester MA,3:54 PM,66.9F,-,36.0F,32%,29.90in,10.0mi,South,17.3mph,-,N/A,,Clear
+boston,2003,04/21/2003,Boston MA,9:54 AM,48.0F,-,35.1F,61%,30.09in,10.0mi,East,10.4mph,-,N/A,,Partly Cloudy
+boston,2003,04/21/2003,Boston MA,10:54 AM,48.9F,-,35.1F,59%,30.08in,10.0mi,ENE,11.5mph,-,N/A,,Partly Cloudy
+boston,2003,04/21/2003,Boston MA,11:54 AM,50.0F,-,35.1F,57%,30.06in,10.0mi,East,13.8mph,-,N/A,,Partly Cloudy
+boston,2003,04/21/2003,Boston MA,12:54 PM,50.0F,-,35.1F,57%,30.02in,10.0mi,East,17.3mph,-,N/A,,Scattered Clouds
+boston,2003,04/21/2003,Boston MA,1:54 PM,50.0F,-,37.0F,61%,29.99in,10.0mi,East,17.3mph,-,N/A,,Mostly Cloudy
+boston,2003,04/21/2003,Boston MA,2:54 PM,52.0F,-,37.9F,59%,29.97in,10.0mi,East,18.4mph,-,N/A,,Scattered Clouds
+boston,2003,04/21/2003,Boston MA,3:54 PM,53.1F,-,39.9F,61%,29.94in,10.0mi,ESE,18.4mph,-,N/A,,Scattered Clouds
+boston,2002,04/15/2002,Worcester MA,9:54 AM,52.0F,-,52.0F,100%,29.95in,0.2mi,East,4.6mph,-,N/A,Fog,Fog
+boston,2002,04/15/2002,Worcester MA,10:54 AM,50.0F,-,50.0F,100%,29.96in,0.2mi,NE,4.6mph,-,N/A,Fog,Fog
+boston,2002,04/15/2002,Worcester MA,11:54 AM,51.1F,-,51.1F,100%,29.96in,0.2mi,NNE,5.8mph,-,N/A,Fog,Fog
+boston,2002,04/15/2002,Worcester MA,1:04 PM,55.4F,-,55.4F,100%,29.94in,4.0mi,SE,4.6mph,-,N/A,,Overcast
+boston,2002,04/15/2002,Worcester MA,2:05 PM,57.2F,-,55.4F,94%,29.95in,10.0mi,ENE,6.9mph,-,N/A,,Scattered Clouds
+boston,2002,04/15/2002,Worcester MA,2:54 PM,66.9F,-,55.0F,66%,29.95in,10.0mi,WSW,12.7mph,16.1mph,N/A,,Mostly Cloudy
+boston,2002,04/15/2002,Worcester MA,3:54 PM,69.1F,-,53.1F,57%,29.94in,10.0mi,West,11.5mph,-,N/A,,Partly Cloudy
+boston,2002,04/15/2002,Boston MA,9:54 AM,52.0F,-,51.1F,97%,29.94in,0.5mi,North,6.9mph,-,N/A,Fog,Fog
+boston,2002,04/15/2002,Boston MA,10:54 AM,51.1F,-,50.0F,96%,29.96in,0.5mi,NW,8.1mph,-,N/A,Fog,Fog
+boston,2002,04/15/2002,Boston MA,11:54 AM,51.1F,-,50.0F,96%,29.97in,0.5mi,NNW,6.9mph,-,N/A,,Overcast
+boston,2002,04/15/2002,Boston MA,12:54 PM,51.1F,-,48.9F,92%,29.96in,1.0mi,North,5.8mph,-,N/A,,Overcast
+boston,2002,04/15/2002,Boston MA,1:54 PM,52.0F,-,48.9F,89%,29.97in,2.0mi,NNE,3.5mph,-,N/A,,Overcast
+boston,2002,04/15/2002,Boston MA,3:01 PM,51.8F,-,48.2F,88%,29.96in,2.5mi,SE,9.2mph,-,N/A,,Overcast
+boston,2002,04/15/2002,Boston MA,4:01 PM,48.2F,-,46.4F,93%,29.97in,1.5mi,SE,10.4mph,-,N/A,,Mostly Cloudy
+boston,2001,04/16/2001,Worcester MA,9:54 AM,45.0F,40.6F,21.9F,40%,29.75in,10.0mi,NE,8.1mph,-,N/A,,Clear
+boston,2001,04/16/2001,Worcester MA,10:54 AM,45.0F,-,21.0F,39%,29.75in,10.0mi,Calm,Calm,-,N/A,,Clear
+boston,2001,04/16/2001,Worcester MA,11:54 AM,48.0F,-,19.0F,32%,29.74in,10.0mi,Variable,4.6mph,-,N/A,,Clear
+boston,2001,04/16/2001,Worcester MA,12:54 PM,50.0F,-,21.0F,32%,29.73in,10.0mi,Variable,4.6mph,-,N/A,,Clear
+boston,2001,04/16/2001,Worcester MA,1:54 PM,52.0F,-,17.1F,25%,29.71in,10.0mi,NNE,10.4mph,-,N/A,,Clear
+boston,2001,04/16/2001,Worcester MA,2:54 PM,53.1F,-,15.1F,22%,29.69in,10.0mi,Calm,Calm,-,N/A,,Clear
+boston,2001,04/16/2001,Worcester MA,3:54 PM,54.0F,-,12.9F,20%,29.68in,10.0mi,WNW,15.0mph,-,N/A,,Clear
+boston,2001,04/16/2001,Boston MA,9:54 AM,46.0F,41.9F,30.9F,56%,29.77in,10.0mi,NE,8.1mph,-,N/A,,Mostly Cloudy
+boston,2001,04/16/2001,Boston MA,10:54 AM,46.9F,-,37.0F,68%,29.76in,10.0mi,East,11.5mph,-,N/A,,Mostly Cloudy
+boston,2001,04/16/2001,Boston MA,11:54 AM,46.9F,-,37.9F,71%,29.75in,10.0mi,East,15.0mph,-,N/A,,Mostly Cloudy
+boston,2001,04/16/2001,Boston MA,12:54 PM,45.0F,38.5F,36.0F,71%,29.75in,10.0mi,ESE,13.8mph,-,N/A,,Overcast
+boston,2001,04/16/2001,Boston MA,1:54 PM,46.9F,-,39.0F,74%,29.73in,10.0mi,ESE,13.8mph,-,N/A,,Overcast
+boston,2001,04/16/2001,Boston MA,2:54 PM,46.9F,-,36.0F,66%,29.71in,10.0mi,ESE,12.7mph,-,N/A,,Overcast
+boston,2001,04/16/2001,Boston MA,3:54 PM,46.9F,-,34.0F,61%,29.69in,10.0mi,ESE,12.7mph,-,N/A,,Overcast
