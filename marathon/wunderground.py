@@ -12,6 +12,7 @@ from lxml.cssselect import CSSSelector
 import pandas as pd
 from time import sleep
 from sys import stdout
+import os
 
 
 def get_hour(hour_text):
@@ -203,6 +204,56 @@ def query_by_csv_to_csv(inputfile, outputfile):
     print 'Saving Results'
     df.to_csv(outputfile, index=False)
     print 'Results saved to', outputfile
+
+
+def get_all_weather_csvfiles(folder):
+    '''Returns a list of all the weather files in a given folder
+
+    Parameters
+    ----------
+    folder: string
+        folder to search for filenames
+
+    Output
+    ------
+    weather_files: list of string
+        list of filenames
+
+    Example
+    -------
+    >>> 'data/boston_weather.csv' in get_all_weather_csvfiles('data/')
+    True
+    '''
+    weather_files = []
+    file_list = os.listdir(folder)
+    for filename in file_list:
+        if filename.find('weather.csv') > 0:
+            weather_files.append(folder+filename)
+    return weather_files
+
+
+def merge_weather_csvfiles(filelist, targetfile):
+    '''Combines multiple weather (csv) files into one.
+
+    Parameters
+    ----------
+    filelist: list of string
+        list of .csv files
+    targetfile: string
+        filename to save the data to
+
+    Output
+    ------
+    None
+    '''
+    df_array = []
+    for filename in filelist:
+        df = pd.read_csv(filename)
+        df_array.append(df)
+    merge_df = pd.concat(df_array)
+    print 'Saving as:', targetfile
+    merge_df.to_csv(targetfile, index=False)
+    print 'Done'
 
 
 def test_fetch_weather():
