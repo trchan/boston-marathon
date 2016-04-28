@@ -667,16 +667,16 @@ AGES = range(AGE_MIN, AGE_MAX+1, 1)
 SAMPLE_SIZE = 50
 
 FOLDER = 'data/'
-weather_file = 'marathon_weather.csv'
+weather_file = 'allweather.csv'
 weather_df = pd.read_csv(FOLDER+weather_file)
 SAVE_FILENAME = 'boston2015_priors+.csv'
 
 if __name__ == '__main__':
     marathon_files = [# 'boston2015_clean.csv',
                       'boston2014_clean.csv', 'boston2013_clean.csv',
-                      'boston2012_clean.csv']
+                      'boston2012_clean.csv', 'boston2011_clean.csv',
+                      'boston2010_clean.csv']
     marathon_files = getmarathonguide('marathonguide/') + marathon_files
-    # output_df = combine_marathons(marathon_files)
     output_df = collect_runners('boston2015_clean.csv', marathon_files)
     # Final processing
     output_df = create_misc_home(output_df)

@@ -31,6 +31,10 @@ marathon/
 - combineboston.py
   - Takes clean.csv marathon data files (Boston Marathon, weatherunderground, and Marathonguide) and merges them together with extra features.
 
+marathon/data/
+- boston_weater.csv
+  - Weather data for the Boston Marathon dates 2001-2016 scraped from wunderground.com.
+
 scripts/
 - EDA2015Marathon.ipynb
   - EDA on 2015 Boston Marathon dataset
@@ -40,6 +44,41 @@ scripts/
   - BAA Scraper for 2001-2009
 - scrapingengine2010-2016.ipynb
   - BAA Scraper for 2010-2016
+
+## The Data Pipeline
+
+**This section is a work in progress**
+
+1. Scraping BAA Data
+
+2. Scraping marathonguide.com Data
+
+Use marathonguide.py
+  find_all_midds(2016, 'data/') --> data/2016marathon_dates.csv, data/2016midd_list.csv
+  find_all_midds(2015, 'data/') --> data/2015marathon_dates.csv, data/2015midd_list.csv
+  find_all_midds(2014, 'data/') --> data/2014marathon_dates.csv, data/2014midd_list.csv
+  find_all_midds(2013, 'data/') --> data/2013marathon_dates.csv, data/2013midd_list.csv
+
+3. Scraping Weather Data
+
+Use wunderground.py to fetch weather file as specified by marathon_dates.csv files.
+
+  query_by_csv_to_csv('data/2013marathon_dates.csv', 'data/2013_weather.csv')
+  query_by_csv_to_csv('data/2014marathon_dates.csv', 'data/2014_weather.csv')
+  query_by_csv_to_csv('data/2015marathon_dates.csv', 'data/2015_weather.csv')
+  query_by_csv_to_csv('data/2016marathon_dates.csv', 'data/2016_weather.csv')
+
+Use wunderground.py to combine all weather files
+
+  filelist = wunderground.get_all_weather_csvfiles('data/')
+  wunderground.merge_weather_csvfiles(filelist, 'data/allweather.csv')
+
+4. Combine Data sets
+
+Use combineboston.py
+
+
+
 
 ## Acknowledgements
 
