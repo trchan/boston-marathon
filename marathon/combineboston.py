@@ -67,7 +67,10 @@ def get_weather_array(wunderground_array, unit):
     unit_length = len(unit)
     for s in wunderground_array:
         if s[-unit_length:] == unit:
-            weather_array.append(float(s[0:-unit_length]))
+            try:
+                weather_array.append(float(s[0:-unit_length]))
+            except ValueError:
+                weather_array.append(0)
         elif s == '-':
             weather_array.append(0)
         elif s == 'Calm':
@@ -669,15 +672,15 @@ SAMPLE_SIZE = 50
 FOLDER = 'data/'
 weather_file = 'allweather.csv'
 weather_df = pd.read_csv(FOLDER+weather_file)
-SAVE_FILENAME = 'boston2015_priors+.csv'
+SAVE_FILENAME = 'boston2016_priors+.csv'
 
 if __name__ == '__main__':
-    marathon_files = [# 'boston2015_clean.csv',
+    marathon_files = ['boston2015_clean.csv',
                       'boston2014_clean.csv', 'boston2013_clean.csv',
                       'boston2012_clean.csv', 'boston2011_clean.csv',
                       'boston2010_clean.csv']
     marathon_files = getmarathonguide('marathonguide/') + marathon_files
-    output_df = collect_runners('boston2015_clean.csv', marathon_files)
+    output_df = collect_runners('boston2016_clean.csv', marathon_files)
     # Final processing
     output_df = create_misc_home(output_df)
     save_file = FOLDER+SAVE_FILENAME
