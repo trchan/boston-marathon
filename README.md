@@ -1,6 +1,7 @@
 # Boston Marathon - Winners and Cheaters
 
-#### Timothy Chan, PhD MBA
+#### Timothy Chan, PhD
+http://linkedin.com/in/trchan
 #### Created April 10th, 2016
 #### Updated April 26th, 2016
 
